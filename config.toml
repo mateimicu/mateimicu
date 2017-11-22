@@ -1,0 +1,4 @@
+baseURL = "http://mateimicu.com/"
+languageCode = "en-us"
+title = "mateimicu"
+theme = "kiss"
