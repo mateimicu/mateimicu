@@ -2,3 +2,10 @@ baseURL = "http://mateimicu.com/"
 languageCode = "en-us"
 title = "mateimicu"
 theme = "kiss"
+Paginate = 5
+enableRobotsTXT = true
+
+[params.social]
+github = "mateimicu"
+email = "micumatei@gmail.com"
+linkedin = "matei-marius-micu-0246a211a"
