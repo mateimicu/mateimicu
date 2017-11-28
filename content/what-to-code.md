@@ -2,9 +2,9 @@
 title: "what-to-code"
 date: 2017-11-28T23:57:06+02:00
 draft: false 
+static: true
 ---
 This is a list with projects I want to code for myself. Some of them are born from curiosity and some try to solve a problem that I have.
-
 
  - CLI C++.
    When I implemented a simple DNS (minimal functionality) [here](https://github.com/mateimicu/dns) I also added a little OOP style CLI
