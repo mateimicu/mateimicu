@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 echo "Deleting old publication"
+
+echo "get the themes"
+git submodule update
+
 rm -rf public
 
 echo "Generating site"
