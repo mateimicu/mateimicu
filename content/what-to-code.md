@@ -27,5 +27,11 @@ This is a list with projects I want to code for myself. Some of them are born fr
  - A utility that automatically unsubscribes you from emails. For example, you can decrees the number of spam emails by unsubscribing to all
    emails. Or you can selectively mark some emails and the utility would try to unsubscribe from them.
    It should be smart enough to follow some steps when trying to finish the process and also smart enough to find the link in the email.
+
  - Find a old game and implement an AI for it (using different algorithms like from ML, IA, mostly based on reinforcement learning)
+   Some inspiration can be found here [here](https://profs.info.uaic.ro/~rbenchea/proiecte_rn.html)
+
+  - A game simulation like "Ultimate Epic Battle Simulator"(not as complex and pretty)
+
+  - An genetic algorithm implementation like [this](https://www.youtube.com/watch?v=GOFws_hhZs8).
 
