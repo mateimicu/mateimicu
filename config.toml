@@ -9,3 +9,7 @@ enableRobotsTXT = true
 github = "mateimicu"
 email = "micumatei@gmail.com"
 linkedin = "matei-marius-micu-0246a211a"
+
+[[params.static]]
+title = "Slides"
+url = "http://slides.mateimicu.com"
