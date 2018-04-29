@@ -3,7 +3,11 @@ title: "Slides"
 date: 2018-04-28T00:15:43+03:00
 draft: False
 ---
-A list with slide presentations:
+List with various slides and presentations.
+
+
+<!--more-->
+
 
 * [OpenStack](http://openstack-slides.mateimicu.com)
 
