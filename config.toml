@@ -10,5 +10,5 @@ github = "mateimicu"
 email = "micumatei@gmail.com"
 linkedin = "matei-marius-micu-0246a211a"
 
-[params.sections]
-slides = "Slides"
+[params.sections_right]
+"/slides" = "Slides"
