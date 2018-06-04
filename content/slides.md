@@ -10,4 +10,4 @@ List with various slides and presentations.
 
 
 * [OpenStack](http://openstack-slides.mateimicu.com)
-
+* [Kubernets Deployments, Volumes, Secrets, ConfigMaps](https://k8s-volumes-secrets-deployments.mateimicu.com/)
