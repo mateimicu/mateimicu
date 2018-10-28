@@ -1,7 +1,7 @@
 ---
 title: "Docker Dynamic Commands"
 date: 2017-12-04T19:51:58+02:00
-draft: true 
+draft: false
 ---
 When learning docker an interesting question you may have is: **What happens with commands that install software when rebuilding an image**.
 <!--more-->
