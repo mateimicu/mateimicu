@@ -6,6 +6,7 @@ draft: false
 
 In this series of posts, I'll try to keep a weekly summary of my progress in my master's degree.
 If somebody actually finds this on the internet, I just started a master's degree that focuses on distributed systems at [Faculty Of Computer Science][info-iasi](part of [University Alexandu Ioan Cuza][uaic]).
+<!--more-->
 
 In my first semester I'll have the following courses:
 
