@@ -12,3 +12,6 @@ linkedin = "matei-marius-micu-0246a211a"
 
 [params.sections_right]
 "/slides" = "Slides"
+
+[taxonomies]
+tag ="tags"

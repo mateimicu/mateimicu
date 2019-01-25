@@ -2,6 +2,7 @@
 title: "Masters Degree week#1 - week#4"
 date: 2018-10-28T20:03:53+02:00
 draft: false
+tags: ["master degree", "WAD", "ATNN", "DOS", "ATSE"]
 ---
 
 In this series of posts, I'll try to keep a weekly summary of my progress in my master's degree.
