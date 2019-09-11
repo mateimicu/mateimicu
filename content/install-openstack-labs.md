@@ -10,7 +10,7 @@ It works like docker-machine or boot2docker:
 
 * spawn two VM's using a guest Hyper-visor (supports VirtualBox and KVM)
 * copy bash scripts in the machine and run it (this will install the OpenStack Components)
-* port-forward some services from the NAT provided by the Hyper-visor to the guess machine
+* port-forward some services from the NAT provided by the Hyper-visor to the guest machine
 
 All the documentation can be found [here](1), it goes in greater details about the setup.
 
@@ -18,7 +18,7 @@ All the documentation can be found [here](1), it goes in greater details about t
 Following the provided documentation on a 
 
 ##### Install dependency
-In order to use this project we need to have a few dependencies satisfied:
+To use this project we need to have a few dependencies satisfied:
 
 **VirtualBox**
 
@@ -69,3 +69,4 @@ This process may take some time depending on your hardware and network speed.
 [2]: http://git.openstack.org/cgit/openstack/training-labs
 [3]: https://github.com/openstack
 [4]: https://releases.openstack.org/
+

@@ -6,7 +6,7 @@ tags: ["master degree", "WAD", "ATNN", "DOS", "ATSE"]
 ---
 
 In this series of posts, I'll try to keep a weekly summary of my progress in my master's degree.
-If somebody actually finds this on the internet, I just started a master's degree that focuses on distributed systems at [Faculty Of Computer Science][info-iasi](part of [University Alexandu Ioan Cuza][uaic]).
+If somebody finds this on the internet, I just started a master's degree that focuses on distributed systems at [Faculty Of Computer Science][info-iasi](part of [University Alexandu Ioan Cuza][uaic]).
 <!--more-->
 
 In my first semester I'll have the following courses:
@@ -19,15 +19,15 @@ In my first semester I'll have the following courses:
 I was able to select the courses on my own (not follow a predefined curriculum) but an extra `research` component was added to my degree.
 At the end of each semester, I'll have to present what research journey and a comity will decide if I passed, and can continue with my degree, or I
 failed and have to switch to a normal master's degree (with a predefined curriculum). My research focus will be on distributed systems and as part of my
-first semester I'll try and grasp as much of the available literature as possible in order to come with a specific "thing" that I can focus my efforts on (besides the normal courses).
+first semester, I'll try and grasp as much of the available literature as possible to come with a specific "thing" that I can focus my efforts on (besides the normal courses).
 
 
-I'll try and keep a weekly update (maybe it will be useful for my coordinators or for me when I have to present my progress), but as the semester started four weeks ago this update will contain the current status of my studies.
+I'll try and keep a weekly update (maybe it will be useful for my coordinators or me when I have to present my progress), but as the semester started four weeks ago this update will contain the current status of my studies.
 
 
 ## Web Application Development
 
-For this course we will have to complete a project, from the proposed one I already chose [DiSyO][distyo], the project will be done in a team (I already paired with another two students). Not many updates on this course, we will have to start work for the project. Until now the course had a "fast-paced" recap of the [Web Systems Development][web] undergraduate course, but we are starting to move into the semantics web part of the course.
+For this course, we will have to complete a project, from the proposed one I already chose [DiSyO][distyo], the project will be done in a team (I already paired with another two students). Not many updates on this course, we will have to start work for the project. Until now the course had a "fast-paced" recap of the [Web Systems Development][web] undergraduate course, but we are starting to move into the semantics web part of the course.
 
 ## Advance Chapters of Neural Networks
 
@@ -43,7 +43,7 @@ to work shroud the details again for this course.
 
 I started work on the first homework that has two components:
 
-- multiply two matrix's in C and use [OpenMP][openmp] to parallelize the work in multiple manners (parallelize one for, all of them, variate the number of threads, etc ...)
+- multiply two matrices in C and use [OpenMP][openmp] to parallelize the work in multiple manners (parallelize one for, all of them, variate the number of threads, etc ...)
 - run multiple experiments and graph how the performance is impacted by the implementation and configuration, for example:
   * variate the number of threads
   * variate the number of cores on the host machine
@@ -51,7 +51,7 @@ I started work on the first homework that has two components:
   * what is the impact of vitalization
   * how various styles of parallelization of the code perform
 
-The program is already written (with 6+1 methos of parallelization, basically parallelize of nor each one of the 3 `for` instruction involved in a matrix multiplication).
+The program is already written (with 6+1 methods of parallelization, basically parallelize of nor each one of the 3 `for` instruction involved in a matrix multiplication).
 Next week I'll have to write a python wrapper that will feed various parameters and restriction to our C implementation and record the running time (and probably plot it).
 
 
@@ -88,7 +88,7 @@ I want to get familiar with LaTex again (I used it in my undergraduate studies a
 
 
 
-Unfortunately I had to make my homerwork repository private (there were some incidents where somebody presented my work) and I can't link the work now, but I will think if I can make it public again or start another one with only the work from my master degree.
+Unfortunately, I had to make my homework repository private (there were some incidents where somebody presented my work) and I can't link the work now, but I will think if I can make it public again or start another one with only the work from my master degree.
 
 
 [info-iasi]: https://www.info.uaic.ro/bin/Main/
@@ -104,3 +104,4 @@ Unfortunately I had to make my homerwork repository private (there were some inc
 [MNIST]: http://yann.lecun.com/exdb/mnist/
 [openmp]: https://www.openmp.org/
 [kubeless]: https://kubeless.io/
+

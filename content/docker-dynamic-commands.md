@@ -1,3 +1,4 @@
+
 ---
 title: "Docker Dynamic Commands"
 date: 2017-12-04T19:51:58+02:00
@@ -25,7 +26,7 @@ EXPOSE 80
 CMD ["python", "app.py"]
 ```
 this is not a complete `Dockerfile`, just the snippets we are interested in.
-If we try to build this a image based on this file, we get something like this:
+If we try to build this an image based on this file, we get something like this:
 ```
 Step 1/5 : FROM python:2.7-slim
 ...
@@ -42,11 +43,11 @@ Successfully built 3609163bdce5
 (the output is truncated to save space).
 The important step is `2` where we update the system. We can see that this will download and install new versions for the libraries that we have on the system.
 
-This can pose a problem because we may rely on specific version of the library. In other words, next time we build the image (imagine we updated the codebase and need to create a new image
+This can pose a problem because we may rely on a specific version of the library. In other words, next time we build the image (imagine we updated the codebase and need to create a new image
 to deploy) the `apt-get update -y && apt-get upgrade -y` run and ruin the image (our application not handling the new libraries).
 
 ### UnionFS to the rescue 
-One thing to keep in mind is the way images are build/stored/transferred using a Union file system that works with layers. If I a layer is already found it will not be "compiled" again, this means that if we add a new file to our directory `echo "new dummy file" >> dummy` and our current directory will look like this:
+One thing to keep in mind is the way images are built/stored/transferred using a Union file system that works with layers. If I a layer is already found it will not be "compiled" again, this means that if we add a new file to our directory `echo "new dummy file" >> dummy` and our current directory will look like this:
 ```bash
 ~ $ ls
 Dockerfile   dummy
@@ -73,7 +74,7 @@ Removing intermediate container a78e73b6e1b9
 Successfully built 96dd2f890cbf
 ```
 we can see that the step `2` was skipped and the cached version for that layer (that runs `RUN apt-get update -y && apt-get upgrade -y`) was used.
-This is an important distinction to make, if we build this image on the same machine (environment) where it was previously build the `RUN` command will not be executed.
+This is an important distinction to make if we build this image on the same machine (environment) where it was previously built the `RUN` command will not be executed.
 
 This helps us maintain the same OS-lvl libraries and binaries when we build images but open a new problem: **security**.
 
@@ -104,7 +105,7 @@ Removing intermediate container 8c3928f25d7a
 Successfully built 4eb0161a51ab
 ```
 Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the **required** dependencies.
-Thankfully most containers don't and **shouldn't** be exposed to the internet.This minimises the attack vectors a bad actor can use.
+Thankfully most containers don't and **shouldn't** be exposed to the internet. This minimizes the attack vectors a bad actor can use.
 
 ### Caching
 Another problem with `apt-get` in a container is the caching problem. You can't have a docker file that looks like this:
@@ -113,4 +114,3 @@ RUN apt-get update -y
 RUN apt-get upgrade -y
 ```
 The first command will use a cache that is not shared with the second command; this is a good reason why you should chain them using bash `&&`.
-

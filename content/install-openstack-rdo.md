@@ -29,10 +29,10 @@ When you have successfully booted the VM you should have at least two network in
 - `enp0s3` corresponding with the NAT network
 - `enp0s8` corresponding with the Host-Only network
 
-We will use the NAT network for internet access to our VM and also internet access for the OpenStack networking.
+We will use the NAT network for internet access to our VM and also internet access for OpenStack networking.
 The Host-Only network will be used to connect to the VM.
 
-Furthermore I'll assume the following conventions:
+Furthermore, I'll assume the following conventions:
 
 - `enp0s3` has the CIDR `10.0.2.0/24` and the DHCP assigned IP was `10.0.2.25`
 - `enp0s8` has the CIRD `192.168.99.0/24` and the DHCP assigned IP is `192.168.99.25`
@@ -87,7 +87,7 @@ DNS2=8.8.4.4
 ```
 For a better understanding I'll explain the required changes:
 
-`BOOTPROTO=static` this was changed from DHCP, it means we want to setup a static IP not to
+`BOOTPROTO=static` this was changed from DHCP, it means we want to set up a static IP not to
 ask a DHCP service for one;
 
 `ONBOOT=yes` this device will be activated at boot time;
@@ -165,14 +165,14 @@ This ssh connection is more convenient to work.
 
 
 ### Install Packstack
-Install the [OpenStack realises](3) you want and the packstack utility
+Install the [OpenStack realizes](3) you want and the packstack utility
 ```bash
 ~ $ sudo yum install -y centos-release-openstack-pike
 ~ $ sudo yum update -y
 ~ $ sudo yum install -y openstack-packstack
 ```
 
-You can use any [OpenStack realises](3), I tested this with Newton(that is deprecated) and Pike.
+You can use any [OpenStack realizes](3), I tested this with Newton(that is deprecated) and Pike.
 
 ### Install Openstack
 
@@ -209,7 +209,7 @@ Run the utility with this settings
 ```
 
 ### Access Horizon
-To access the openstack deployment you first need to allow access to `httpd` from the private ip.
+To access the OpenStack deployment you first need to allow access to `httpd` from the private ip.
 
 Edit the file `/etc/httpd/conf.d/15-horizon_vhost.conf` and replace all occurrence's of `ServerAlias` with just one `ServerAlias *`.
 It should look like this (this is just the snipper)
@@ -226,7 +226,7 @@ It should look like this (this is just the snipper)
 ```
 
 You can now access the dashboard using the private ip (in our example `192.168.99.25`).
-The credential can be found them in one of the files `keystonerc_admin` or `keystonerc_admin`.
+The credential can be found in one of the files `keystonerc_admin` or `keystonerc_admin`.
 
 ### Troubleshooting
 When the packer utility finishes, it will give you information about the status of the deployment and the location of the logs.
@@ -256,3 +256,4 @@ You can list all the Openstack services with the following command:
 [6]: https://www.rdoproject.org/install/packstack/
 [7]: https://developer.gnome.org/NetworkManager/unstable/nmcli.html
 [8]: https://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html
+
