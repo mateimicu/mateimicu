@@ -9,6 +9,21 @@ enableRobotsTXT = true
 github = "mateimicu"
 email = "contact@mateimicu.com"
 linkedin = "matei-marius-micu-0246a211a"
+rss = "index.xml" # Add this to show RSS button in social.
+
+[params.rss] # Adding this tag enables RSS feed
+includeContent = true # Includes whole content in rss
+authorName = "Matei-Marius Micu" # Author full name
+authorEmail = "contact@mateimicu.com" # Author email
+
+[params.social.config]
+platforms = ["github", "email", "linkedin", "rss"]
+
+
+[params.info]
+enableSocial = true # Adds OpenGraph and Twitter cards
+related = true # Includes related articles at the bottom of the article
+codeCopy = true # Add cop
 
 [params.sections_right]
 "/slides" = "Slides"
