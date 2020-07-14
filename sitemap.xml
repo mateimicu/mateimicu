@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://mateimicu.com/k8s-on-hetzner/</loc>
+    <lastmod>2020-07-12T17:42:29+03:00</lastmod>
+  </url>
   
   <url>
     <loc>http://mateimicu.com/tags/atnn/</loc>
@@ -55,11 +60,6 @@
   <url>
     <loc>http://mateimicu.com/tags/wad/</loc>
     <lastmod>2018-11-10T20:03:53+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://mateimicu.com/masters-degree-01/</loc>
-    <lastmod>2018-10-28T20:03:53+02:00</lastmod>
   </url>
   
   <url>

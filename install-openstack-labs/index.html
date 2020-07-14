@@ -96,74 +96,40 @@ It works like docker-machine or boot2docker:
     <h1 class="title">Install Openstack Labs</h1>
     
     <div class="content">
-      
-
-<p>Openstack Training Labs is a python project that installs a new OpenStack cluster in two virtual machines.
+      <p>Openstack Training Labs is a python project that installs a new OpenStack cluster in two virtual machines.
 It is an easy way to provision a working deployment for testing/development purposes.</p>
-
 <p>It works like docker-machine or boot2docker:</p>
-
 <ul>
 <li>spawn two VM&rsquo;s using a guest Hyper-visor (supports VirtualBox and KVM)</li>
 <li>copy bash scripts in the machine and run it (this will install the OpenStack Components)</li>
 <li>port-forward some services from the NAT provided by the Hyper-visor to the guest machine</li>
 </ul>
-
 <p>All the documentation can be found <a href="1">here</a>, it goes in greater details about the setup.</p>
-
 <h2 id="step-by-step-guide">Step by Step Guide</h2>
-
 <p>Following the provided documentation on a</p>
-
 <h5 id="install-dependency">Install dependency</h5>
-
 <p>To use this project we need to have a few dependencies satisfied:</p>
-
 <p><strong>VirtualBox</strong></p>
-
 <p>This will install the VirtualBox utility and a graphical Interface that we can use</p>
-
-<pre><code class="language-bash">~ $ sudo apt-get install virtualbox virtualbox-qt
-</code></pre>
-
-<p><strong>Git</strong></p>
-
-<pre><code class="language-bash">~ $ sudo apt-get git
-</code></pre>
-
-<p><strong>Python</strong>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo apt-get install virtualbox virtualbox-qt
+</code></pre></div><p><strong>Git</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo apt-get git
+</code></pre></div><p><strong>Python</strong>
 This is usually already installed in most distributions.</p>
-
-<pre><code class="language-bash">~ $ sudo apt-get install python2.7
-</code></pre>
-
-<h5 id="clone-the-project">Clone the project</h5>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo apt-get install python2.7
+</code></pre></div><h5 id="clone-the-project">Clone the project</h5>
 <p>The project is hosted on <a href="2">Gerrit</a> but all the OpenStack project have mirrors on <a href="3">GitHub</a>.</p>
-
-<pre><code class="language-bash">~ $ git clone https://github.com/openstack/training-labs.git
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ git clone https://github.com/openstack/training-labs.git
 ~ $ cd training-labs/labs
-</code></pre>
-
-<p>We need to use the latest release of OpenStack.(You can check the OpenStack releases <a href="https://releases.openstack.org/">here</a>)</p>
-
+</code></pre></div><p>We need to use the latest release of OpenStack.(You can check the OpenStack releases <a href="https://releases.openstack.org/">here</a>)</p>
 <pre><code>~ $ git checkout stable/queens
-</code></pre>
-
-<h5 id="start-the-cluster">Start the cluster</h5>
-
+</code></pre><h5 id="start-the-cluster">Start the cluster</h5>
 <p>We should have a tree structure like this</p>
-
-<pre><code class="language-bash">~ $ ls
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ ls
 autostart  config  lib  log  osbash  scripts  stacktrain  st.py  tests  tools  wbatch
-</code></pre>
-
-<p>We can run the provisioning with the following command</p>
-
-<pre><code class="language-bash">~ $ ./st.py --verbose --gui gui --provider virtualbox --build cluster
-</code></pre>
-
-<p>This process may take some time depending on your hardware and network speed.</p>
+</code></pre></div><p>We can run the provisioning with the following command</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ ./st.py --verbose --gui gui --provider virtualbox --build cluster
+</code></pre></div><p>This process may take some time depending on your hardware and network speed.</p>
 
       
       <div class="related">

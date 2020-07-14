@@ -12,6 +12,139 @@
     
     
     <item>
+      <title>K8s on Hetzner Cloud</title>
+      <link>http://mateimicu.com/k8s-on-hetzner/</link>
+      <pubDate>Sun, 12 Jul 2020 17:42:29 +0300</pubDate>
+      <author>Matei-Marius Micu</author>
+      <guid>http://mateimicu.com/k8s-on-hetzner/</guid>
+      <description></description>
+      
+      <content>&lt;p&gt;I was looking at having a long-running k8s cluster for testing and pet projects, &lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt; looks like a good initiative.&lt;/p&gt;
+&lt;h3 id=&#34;goal&#34;&gt;Goal&lt;/h3&gt;
+&lt;p&gt;Have a running k8s cluster that fits the following criteria:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Secure - the cluster will be exposed to the internet&lt;/li&gt;
+&lt;li&gt;Scalable - I&amp;rsquo;m not sure what I will run on it, probably a lot of side projects and data mining projects, so I would like to scale it from time to time. At the same time scalability (elasticity) helps ensure the cluster is not fragile&lt;/li&gt;
+&lt;li&gt;Replicable - I want to spin a new cluster, destroy this one and recreate it at will. Replicability is partially related to scalability/elasticity but also about bootstrapping the cluster&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Also, a few restrictions (side quests) needed for this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;learn more about security and k8s internals&lt;/li&gt;
+&lt;li&gt;don&amp;rsquo;t spend a lot of money&lt;/li&gt;
+&lt;li&gt;going for a managed solutions is cheating (for now)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;why-hetzner-cloudhetzner-cloud&#34;&gt;Why &lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;I already have experience with &lt;a href=&#34;eks&#34;&gt;EKS&lt;/a&gt; and &lt;a href=&#34;do-k8s&#34;&gt;K8s on DigitalOcean&lt;/a&gt;, but they can get a bit expensive (especially if you start using other services).&lt;/p&gt;
+&lt;p&gt;There is a good post &lt;a href=&#34;https://devonblog.com/containers/affordable-kubernetes-cluster/&#34;&gt;Affordable Kubernetes Cluster by Remko Seelig&lt;/a&gt; about using &lt;a href=&#34;https://cloud.google.com/kubernetes-engine&#34;&gt;GKE&lt;/a&gt; with &lt;a href=&#34;https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms&#34;&gt;preemptible nodes&lt;/a&gt;, but the cluster does not have a lot of computing power.&lt;/p&gt;
+&lt;p&gt;I already looked at &lt;a href=&#34;https://github.com/kelseyhightower/kubernetes-the-hard-way&#34;&gt;Kubernetes The Hard Way&lt;/a&gt; and remembered that &lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt; offers pretty cheap compute instances (starts at 2,89 €).
+Working with &lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt; means that I have to run control plane myself, this may cut in my processing power but has the advantage that I should get a more in-depth look at how it works.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Cloud Provider&lt;/th&gt;
+&lt;th&gt;Control Plane cost&lt;/th&gt;
+&lt;th&gt;worker nodes (8vCPU 16GB ram)&lt;/th&gt;
+&lt;th&gt;worker nodes count&lt;/th&gt;
+&lt;th&gt;Min Cost&lt;/th&gt;
+&lt;th&gt;Max Cost&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Google (gke)&lt;/td&gt;
+&lt;td&gt;0 (for single-zone or multi-zonal)  $0.10 per hour (± 73$ per month) for regional cluster&lt;/td&gt;
+&lt;td&gt;31.86$* -&amp;gt; 105$ ~ 9 * g1-small * preemptible price&lt;/td&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;32$&lt;/td&gt;
+&lt;td&gt;105$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AWS (EKS)&lt;/td&gt;
+&lt;td&gt;$0.10 per hour (± 73$ per month)&lt;/td&gt;
+&lt;td&gt;28$* -&amp;gt; 146$ ~ 4 * a1.large in Ohio * spot insance price&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;91$&lt;/td&gt;
+&lt;td&gt;219$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Azure (AKS)&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;$26* -&amp;gt; $265.72 ~ 4 * A2 v2 in East US2 * for maximum spot instance discount&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;26$&lt;/td&gt;
+&lt;td&gt;265$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Linode&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;$80 ~ 4 * (2vCPU 4GB ram)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;80$&lt;/td&gt;
+&lt;td&gt;80$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Digital Ocean&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;$80 ~ 4 * (2vCPU 4GB ram)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;80$&lt;/td&gt;
+&lt;td&gt;80$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Hetzner Cloud&lt;/td&gt;
+&lt;td&gt;5.7€ (assuming CX21 have enough resources)&lt;/td&gt;
+&lt;td&gt;± 22 € (4 CX21)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;27.7€ (around 32$)&lt;/td&gt;
+&lt;td&gt;27.7€ (around 32$)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;There are a few caveats with each solution:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;preemptible/spot instances can be shut down; we can run part of the instances as normal ones and have smart auto-scaling to provision more if needed&lt;/li&gt;
+&lt;li&gt;spot instance costs can vary for AWS and Azure (preemptible instances have a fixed price on Google)&lt;/li&gt;
+&lt;li&gt;with cloud providers (Google, AWS, Azure, DigitalOcean, Linode) other costs can occur (you can avoid them if you really want):
+&lt;ul&gt;
+&lt;li&gt;extra storage costs (PV&amp;rsquo;s for example)&lt;/li&gt;
+&lt;li&gt;data transfer/networking costs&lt;/li&gt;
+&lt;li&gt;backup costs&lt;/li&gt;
+&lt;li&gt;logging costs (for example shipping logs to CloudWatch)&lt;/li&gt;
+&lt;li&gt;load balancer costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.google.com/kubernetes-engine&#34;&gt;GKE&lt;/a&gt; with g1-small may not be worth it as the instance is pretty underpowered&lt;/li&gt;
+&lt;li&gt;Running the control plane can be tricky (this is why most of the cloud providers offer managed control plane)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One big advantage of running the control plane and doing everything from scratch is the learning process (one of the side quests for this pet project).
+&lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt; has a simple offering, I hope to get support (at least beta) for multiple things:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubernetes/autoscaler/issues/2054&#34;&gt;cluster auto scaler&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubernetes-sigs/cluster-api&#34;&gt;cluster api&lt;/a&gt; (looks like somebody is starting a business around this &lt;a href=&#34;https://www.upwork.com/jobs/Make-Kubernetes-cluster-production-ready-Hetzner-cloud-using-the-Cluster-API_~01c7e42d8122ac97ad&#34;&gt;upwork job&lt;/a&gt; and &lt;a href=&#34;https://github.com/cluster-api-provider-hcloud/cluster-api-provider-hcloud/&#34;&gt;github cluster api for hcloud&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;existing-resources-and-approaches&#34;&gt;Existing resources and approaches&lt;/h3&gt;
+&lt;p&gt;Looking online there is already some work done in this direction&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cluster-api-provider-hcloud/cluster-api-provider-hcloud/&#34;&gt;github cluster api for hcloud&lt;/a&gt; looks like the exact thing I want&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hobby-kube/guide&#34;&gt;hoby-kube&lt;/a&gt; seems to have a complete guide&lt;/li&gt;
+&lt;li&gt;There is also some documentation from &lt;a href=&#34;https://www.hetzner.com/cloud&#34;&gt;Hetzner Cloud&lt;/a&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://community.hetzner.com/tutorials/install-kubernetes-cluster&#34;&gt;Install a Kubernetes cluster on cloud servers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://community.hetzner.com/tutorials/create-microk8s-cluster&#34;&gt;Create a Microk8s Cluster&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tmjohnson.co.uk/posts/k8s/&#34;&gt;Create a complete cheapo Kubernetes cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@jmrobles/how-to-create-a-kubernetes-cluster-with-rancher-on-hetzner-3b2f7f0c037a&#34;&gt;How to create a Kubernetes cluster with Rancher on Hetzner&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/xetys/hetzner-kube&#34;&gt;hetzner-kube&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://metawave.ch/posts/kubernetes-hetzner-setup/&#34;&gt;Kubernetes on Hetzner Cloud: Setup a Kubernetes Cluster&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There are also multiple installers for k8s; we can even consider &lt;a href=&#34;https://k3s.io/&#34;&gt;k3s&lt;/a&gt; or &lt;a href=&#34;%5Bhttps://microk8s.io/%5D&#34;&gt;microk8s&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h3&gt;
+&lt;p&gt;I&amp;rsquo;ll probably look more at &lt;a href=&#34;https://github.com/kubernetes-sigs/cluster-api&#34;&gt;cluster api&lt;/a&gt; and try to figure out how it works&lt;/p&gt;</content>
+      
+    </item>
+    
+    <item>
       <title>Masters Degree First Year Update.</title>
       <link>http://mateimicu.com/masters-degree-02/</link>
       <pubDate>Sat, 10 Nov 2018 20:03:53 +0200</pubDate>
@@ -21,82 +154,50 @@
       
       <content>&lt;p&gt;Update for the first year, it wasn&amp;rsquo;t quite weekly like mentioned in the last post ;).
 Because some time passed I&amp;rsquo;ll only give a short summary.&lt;/p&gt;
-
 &lt;p&gt;Coursers for the first semester:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~busaco/teach/courses/wade/&#34;&gt;Web Application Development&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://sites.google.com/view/rbenchea/advanced-chapters-of-neural-networks&#34;&gt;Advance Chapters of Neural Networks&lt;/a&gt; (I also followed &lt;a href=&#34;https://sites.google.com/view/rbenchea/neural-networks&#34;&gt;Neural Networks&lt;/a&gt; the undergraduate course)&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~vidrascu/MasterSOD/index.html&#34;&gt;Distributed Operating Systems&lt;/a&gt; (the website might be password protected but I have the [course description][sod-cd])&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~adiftene/Scoala/2019/ASET/index.html&#34;&gt;Advanced Software Engineering Techniques&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Courses for the second semester:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~eonica/ebs/&#34;&gt;Event-based systems&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~webdata/planuri/master/MSD2FS01-ro.pdf&#34;&gt;Specification and verification of distributed systems&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;[Pragmatical aspects related to cloud computing][&lt;a href=&#34;https://www.qwiklabs.com/&#34;&gt;https://www.qwiklabs.com/&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;[Pragmatical aspects related to cloud computing][https://www.qwiklabs.com/]&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~adria/teach/courses/pcd/&#34;&gt;Distributed and parallel programming &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;web-application-development&#34;&gt;Web Application Development&lt;/h2&gt;
-
 &lt;p&gt;On this course, we progressed to &lt;a href=&#34;https://www.w3.org/2001/sw/wiki/RDF&#34;&gt;RDF&lt;/a&gt; and got an introduction to &lt;a href=&#34;https://en.wikipedia.org/wiki/SPARQL&#34;&gt;SPARQL&lt;/a&gt;. During the laboratories and courses, we also explored different ways to use/create and manipulate Semantic Data.&lt;/p&gt;
-
 &lt;p&gt;Here my team&amp;rsquo;s final project took all the projects from &lt;a href=&#34;https://landscape.cncf.io/&#34;&gt;Cloud Native Computing Foundation Landscape&lt;/a&gt; ) mapped it into an Ontology about distributed and CloudNative software projects and in combinations with &lt;a href=&#34;schema.org&#34;&gt;schema.org&lt;/a&gt; we could have some smart queries in order to help a developer  choose the best type of technology based on license, GitHub metrics, technologies used, etc &amp;hellip; .&lt;/p&gt;
-
 &lt;h2 id=&#34;advance-chapters-of-neural-networks&#34;&gt;Advance Chapters of Neural Networks&lt;/h2&gt;
-
 &lt;p&gt;Implemented successfully the &lt;a href=&#34;http://yann.lecun.com/exdb/mnist/&#34;&gt;MNIST dataset&lt;/a&gt; homework.&lt;/p&gt;
-
 &lt;p&gt;For the final project, we classified &lt;a href=&#34;https://www.cs.toronto.edu/~kriz/cifar.html&#34;&gt;CIFRA10&lt;/a&gt; dataset and we were graded based on our accuracy. The model was a  convolutional neural network.&lt;/p&gt;
-
 &lt;h2 id=&#34;distributed-operating-systems&#34;&gt;Distributed Operating Systems&lt;/h2&gt;
-
 &lt;p&gt;The python wrapper for the last homework used numpy and pandas to plot graphs of the results.&lt;/p&gt;
-
 &lt;p&gt;For the second and third homework, we had to implement various operations for images (very similar to matrics operations), break the processing in multiple chings and schedule them on workers run with  [OpenMP][openmp].&lt;/p&gt;
-
 &lt;p&gt;For the research part, I had a presentation about &lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.159.4643&amp;amp;rep=rep1&amp;amp;type=pdf&#34;&gt;Lamport, L. (2006). Fast paxos. Distributed Computing, 19(2), 79-103.&lt;/a&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;advanced-software-engineering-techniques&#34;&gt;Advanced Software Engineering Techniques&lt;/h2&gt;
-
 &lt;p&gt;Our solution examines the running pattern of various functions running in  &lt;a href=&#34;https://kubeless.io/&#34;&gt;Kubeless&lt;/a&gt; and predicts the load allowing us the possibility to scale up/down when needed.&lt;/p&gt;
-
 &lt;h1 id=&#34;second-semester&#34;&gt;Second Semester&lt;/h1&gt;
-
 &lt;h2 id=&#34;event-based-systems&#34;&gt;Event-based systems&lt;/h2&gt;
-
 &lt;p&gt;Here the focus on all the types of event-based systems,  we analyzed topic-based systems, content-based systems, how they are implemented and the pros and cons to all of them.
 We also analyzed various researched papers.
 Four the final project we have created a broker overlay over &lt;a href=&#34;https://github.com/nats-io/nats-streaming-server&#34;&gt;NATS&lt;/a&gt; that is a topic-based streaming platform) that implement content-based filtering: you specify the property of the content that you are interested in and the brokers will stream to you all the messages that match. The project is extremely experimental but is available &lt;a href=&#34;https://github.com/mateimicu/nats-overlay-broker&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;My team also took a closer look at &lt;a href=&#34;https://arxiv.org/pdf/1709.01363.pdf&#34;&gt;de Assuncao, M. D., da Silva Veith, A., &amp;amp; Buyya, R. (2018). Distributed data stream processing and edge computing: A survey on resource elasticity and future directions. Journal of Network and Computer Applications, 103, 1-17.&lt;/a&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;specification-and-verification-of-distributed-systems&#34;&gt;Specification and verification of distributed systems&lt;/h2&gt;
-
 &lt;p&gt;This course was mostly based on theory and exercises and we looked at various semantics and mathematical(logics) models that can help us specify and check various properties of distributed systems.&lt;/p&gt;
-
 &lt;p&gt;For the practica side (except exercises) we looked at &lt;a href=&#34;http://cpntools.org/&#34;&gt;CPN Tools
 &lt;/a&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;distributed-and-parallel-programming&#34;&gt;Distributed and parallel programming&lt;/h2&gt;
-
 &lt;p&gt;Here an overview of cloud paradigms and offerings was presented from a research perspective.&lt;/p&gt;
-
 &lt;p&gt;Our projects revolved around architecting distributed applications based on various other technologies (blockchain for example) that can implement highly sensitive tasks, we looked at how we can ensure using blockchain the fair use of data streams provided by IoT devices.&lt;/p&gt;
-
 &lt;h2 id=&#34;pragmatical-aspects-related-to-cloud-computing&#34;&gt;Pragmatical aspects related to cloud computing&lt;/h2&gt;
-
 &lt;p&gt;This course was actually about &lt;a href=&#34;https://aws.amazon.com/&#34;&gt;AWS&lt;/a&gt; and it was presented by engineers working on the tools using &lt;a href=&#34;https://www.qwiklabs.com/&#34;&gt;qwiklabs&lt;/a&gt;. It presented various architectures used for creating cloud-native applications and how we can leverage tools from &lt;a href=&#34;https://aws.amazon.com/&#34;&gt;AWS&lt;/a&gt;.&lt;/p&gt;
-
 &lt;h1 id=&#34;research&#34;&gt;Research&lt;/h1&gt;
-
 &lt;p&gt;In this category I&amp;rsquo;ll put the progress on the research side, articles I read/plan to read and what I&amp;rsquo;m trying to understand at the moment.&lt;/p&gt;
-
-&lt;h6 id=&#34;done-reading-viewing&#34;&gt;Done Reading/Viewing&lt;/h6&gt;
-
+&lt;h6 id=&#34;done-readingviewing&#34;&gt;Done Reading/Viewing&lt;/h6&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=yE3eMxYJDiE&#34;&gt;Building consistent transactions with inconsistent replication&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://drive.google.com/file/d/1oLOS6U1GiXFUJQ_w7HssO_YVVrH204sT/view&#34;&gt;A Brief History of Information-Centric Network&lt;/a&gt;&lt;/li&gt;
@@ -112,120 +213,20 @@ Four the final project we have created a broker overlay over &lt;a href=&#34;htt
 &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=EGRmmxVFOfE&#34;&gt;Practical Distributed Consensus using HashiCorp/raft&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h6 id=&#34;future-work&#34;&gt;Future Work&lt;/h6&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://ecommons.cornell.edu/bitstream/handle/1813/6567/86-727.pdf?sequence=1&#34;&gt;Alpern, B., &amp;amp; Schneider, F. B. (1987). Recognizing safety and liveness. Distributed computing, 2(3), 117-126.&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://link.springer.com/content/pdf/10.1007/s13174-011-0027-x.pdf&#34;&gt;Höfer, C. N., &amp;amp; Karagiannis, G. (2011). Cloud computing services: taxonomy and comparison. Journal of Internet Services and Applications, 2(2), 81-94.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.researchgate.net/profile/Robbert_Van_Renesse/publication/221029788_Replication_Techniques_for_Availability/links/0c96052b26a4fc846a000000.pdf&#34;&gt;Van Renesse, Robbert &amp;amp; Guerraoui, Rachid. (2010). Replication Techniques for Availability. 5959. 19-40. 10.&lt;sup&gt;1007&lt;/sup&gt;&amp;frasl;&lt;sub&gt;978&lt;/sub&gt;-3-642-11294-2_2. &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.researchgate.net/profile/Robbert_Van_Renesse/publication/221029788_Replication_Techniques_for_Availability/links/0c96052b26a4fc846a000000.pdf&#34;&gt;Van Renesse, Robbert &amp;amp; Guerraoui, Rachid. (2010). Replication Techniques for Availability. 5959. 19-40. 10.1007/978-3-642-11294-2_2. &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://lamport.azurewebsites.net/pubs/lamport-paxos.pdf&#34;&gt;ACM Transactions on Computer Systems 16, 2 (May 1998), 133-169.  Also appeared as SRC Research Report 49. &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://jtfmumm.com/blog/2015/11/17/crdt-primer-1-defanging-order-theory/&#34;&gt;A CRDT Primer Part I: Defanging Order Theory
 &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://delivery.acm.org/10.1145/1730000/1721672/p50-armbrust.pdf?ip=89.136.123.38&amp;amp;id=1721672&amp;amp;acc=OPEN&amp;amp;key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E6D218144511F3437&amp;amp;__acm__=1568230945_600b4bf2d68ca1aa70ae9e72f6291ded&#34;&gt;Armbrust, Michael &amp;amp; Fox, Armando &amp;amp; Griffith, Rean &amp;amp; Joseph, Anthony &amp;amp; Katz, Randy &amp;amp; Konwinski, Andy &amp;amp; Lee, Gunho &amp;amp; Patterson, David &amp;amp; Rabkin, Ariel &amp;amp; Stoica, Ion &amp;amp; Zaharia, Matei. (2010). A View of Cloud Computing. Commun. ACM. 53. 50-58. 10.&lt;sup&gt;1145&lt;/sup&gt;&amp;frasl;&lt;sub&gt;1721654&lt;/sub&gt;.1721672. &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://delivery.acm.org/10.1145/1730000/1721672/p50-armbrust.pdf?ip=89.136.123.38&amp;amp;id=1721672&amp;amp;acc=OPEN&amp;amp;key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E6D218144511F3437&amp;amp;__acm__=1568230945_600b4bf2d68ca1aa70ae9e72f6291ded&#34;&gt;Armbrust, Michael &amp;amp; Fox, Armando &amp;amp; Griffith, Rean &amp;amp; Joseph, Anthony &amp;amp; Katz, Randy &amp;amp; Konwinski, Andy &amp;amp; Lee, Gunho &amp;amp; Patterson, David &amp;amp; Rabkin, Ariel &amp;amp; Stoica, Ion &amp;amp; Zaharia, Matei. (2010). A View of Cloud Computing. Commun. ACM. 53. 50-58. 10.1145/1721654.1721672. &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.133.4969&amp;amp;rep=rep1&amp;amp;type=pdf&#34;&gt;Attiya, H., &amp;amp; Welch, J. L. (1994). Sequential consistency versus linearizability. ACM Transactions on Computer Systems (TOCS), 12(2), 91-122.&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://db.cs.berkeley.edu/cs286/papers/dangers-sigmod1996.pdf&#34;&gt;Gray, J., Helland, P., O&amp;rsquo;Neil, P., &amp;amp; Shasha, D. (1996). The dangers of replication and a solution. ACM SIGMOD Record, 25(2), 173-182.&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://blough.ece.gatech.edu/8813/schneider_state_machine.pdf&#34;&gt;Schneider, F. B. (1990). Implementing fault-tolerant services using the state machine approach: A tutorial. ACM Computing Surveys (CSUR), 22(4), 299-319.&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;And I still need to get familiar with LaTeX&lt;/p&gt;</content>
-      
-    </item>
-    
-    <item>
-      <title>Masters Degree week#1 - week#4</title>
-      <link>http://mateimicu.com/masters-degree-01/</link>
-      <pubDate>Sun, 28 Oct 2018 20:03:53 +0200</pubDate>
-      <author>Matei-Marius Micu</author>
-      <guid>http://mateimicu.com/masters-degree-01/</guid>
-      <description></description>
-      
-      <content>&lt;p&gt;In this series of posts, I&amp;rsquo;ll try to keep a weekly summary of my progress in my master&amp;rsquo;s degree.
-If somebody finds this on the internet, I just started a master&amp;rsquo;s degree that focuses on distributed systems at &lt;a href=&#34;https://www.info.uaic.ro/bin/Main/&#34;&gt;Faculty Of Computer Science&lt;/a&gt;(part of &lt;a href=&#34;http://www.uaic.ro/&#34;&gt;University Alexandu Ioan Cuza&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;In my first semester I&amp;rsquo;ll have the following courses:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~busaco/teach/courses/wade/&#34;&gt;Web Application Development&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://sites.google.com/view/rbenchea/advanced-chapters-of-neural-networks&#34;&gt;Advance Chapters of Neural Networks&lt;/a&gt; (I also followed &lt;a href=&#34;https://sites.google.com/view/rbenchea/neural-networks&#34;&gt;Neural Networks&lt;/a&gt; the undergraduate course)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~vidrascu/MasterSOD/index.html&#34;&gt;Distributed Operating Systems&lt;/a&gt; (the website might be password protected but I have the &lt;a href=&#34;https://profs.info.uaic.ro/~webdata/planuri/master/ro/MSD1104O1.pdf&#34;&gt;course description&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://profs.info.uaic.ro/~adiftene/Scoala/2019/ASET/index.html&#34;&gt;Advanced Software Engineering Techniques&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I was able to select the courses on my own (not follow a predefined curriculum) but an extra &lt;code&gt;research&lt;/code&gt; component was added to my degree.
-At the end of each semester, I&amp;rsquo;ll have to present what research journey and a comity will decide if I passed, and can continue with my degree, or I
-failed and have to switch to a normal master&amp;rsquo;s degree (with a predefined curriculum). My research focus will be on distributed systems and as part of my
-first semester, I&amp;rsquo;ll try and grasp as much of the available literature as possible to come with a specific &amp;ldquo;thing&amp;rdquo; that I can focus my efforts on (besides the normal courses).&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ll try and keep a weekly update (maybe it will be useful for my coordinators or me when I have to present my progress), but as the semester started four weeks ago this update will contain the current status of my studies.&lt;/p&gt;
-
-&lt;h2 id=&#34;web-application-development&#34;&gt;Web Application Development&lt;/h2&gt;
-
-&lt;p&gt;For this course, we will have to complete a project, from the proposed one I already chose &lt;a href=&#34;https://profs.info.uaic.ro/~busaco/teach/courses/wade/projects/#distributed-os-onto&#34;&gt;DiSyO&lt;/a&gt;, the project will be done in a team (I already paired with another two students). Not many updates on this course, we will have to start work for the project. Until now the course had a &amp;ldquo;fast-paced&amp;rdquo; recap of the &lt;a href=&#34;https://profs.info.uaic.ro/~busaco/teach/courses/websys/&#34;&gt;Web Systems Development&lt;/a&gt; undergraduate course, but we are starting to move into the semantics web part of the course.&lt;/p&gt;
-
-&lt;h2 id=&#34;advance-chapters-of-neural-networks&#34;&gt;Advance Chapters of Neural Networks&lt;/h2&gt;
-
-&lt;p&gt;I already had the first homework (from the undergraduate course) in which we need to implement and train
-10 perceptions that recognize the numbers from the &lt;a href=&#34;http://yann.lecun.com/exdb/mnist/&#34;&gt;MNIST dataset&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;For the second homework we need to implement a neural network that can recognize the numbers and train it using
-gradient descent, it also must use softmax at the last layer and cross-entropy as the cost function. The weights should be
-initialized properly also. Unfortunately, I could not find the implementation from the last year, everything is for the best as I also need
-to work shroud the details again for this course.&lt;/p&gt;
-
-&lt;h2 id=&#34;distributed-operating-systems&#34;&gt;Distributed Operating Systems&lt;/h2&gt;
-
-&lt;p&gt;I started work on the first homework that has two components:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;multiply two matrices in C and use &lt;a href=&#34;https://www.openmp.org/&#34;&gt;OpenMP&lt;/a&gt; to parallelize the work in multiple manners (parallelize one for, all of them, variate the number of threads, etc &amp;hellip;)&lt;/li&gt;
-&lt;li&gt;run multiple experiments and graph how the performance is impacted by the implementation and configuration, for example:
-
-&lt;ul&gt;
-&lt;li&gt;variate the number of threads&lt;/li&gt;
-&lt;li&gt;variate the number of cores on the host machine&lt;/li&gt;
-&lt;li&gt;what is the impact of containerization&lt;/li&gt;
-&lt;li&gt;what is the impact of vitalization&lt;/li&gt;
-&lt;li&gt;how various styles of parallelization of the code perform&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The program is already written (with 6+1 methods of parallelization, basically parallelize of nor each one of the 3 &lt;code&gt;for&lt;/code&gt; instruction involved in a matrix multiplication).
-Next week I&amp;rsquo;ll have to write a python wrapper that will feed various parameters and restriction to our C implementation and record the running time (and probably plot it).&lt;/p&gt;
-
-&lt;h2 id=&#34;advanced-software-engineering-techniques&#34;&gt;Advanced Software Engineering Techniques&lt;/h2&gt;
-
-&lt;p&gt;For this course, we have to implement a project that we decide on in a team (also here I already got two colleges). We decided to analyze the scalability of a multi-cloud function as a service (we might use as a base &lt;a href=&#34;https://kubeless.io/&#34;&gt;Kubeless&lt;/a&gt;). The two partners for this project are focused on Data Science and Machine Learning and my focus will be on the infrastructure and Function as a service part (I already have experience with AWS, OpenStack, Terraform and Kubernetes and I can do most of the work on this part).&lt;/p&gt;
-
-&lt;h2 id=&#34;research&#34;&gt;Research&lt;/h2&gt;
-
-&lt;p&gt;In this category I&amp;rsquo;ll put the progress on the research side, articles I read/plan to read and what I&amp;rsquo;m trying to understand at the moment.&lt;/p&gt;
-
-&lt;h6 id=&#34;done-reading-viewing&#34;&gt;Done Reading/Viewing&lt;/h6&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.187.8545&amp;amp;rep=rep1&amp;amp;type=pdf&#34;&gt;Vogels, W. (2009). Eventually consistent. Communications of the ACM, 52(1), 40-44&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc5218&#34;&gt;What Makes for a Successful Protocol?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://infoscience.epfl.ch/record/52326/files/IC_TECH_REPORT_199935.pdf&#34;&gt;Wiesmann, M., Pedone, F., Schiper, A., Kemme, B., &amp;amp; Alonso, G. (2000). Understanding replication in databases and distributed systems. In Distributed Computing Systems, 2000. Proceedings. 20th International Conference on (pp. 464-474). IEEE.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://dlib.scu.ac.ir/bitstream/Hannan/168669/1/7404193.pdf&#34;&gt;Khoshkbarforoushha, A., Wang, M., Ranjan, R., Wang, L., Alem, L., Khan, S. U., &amp;amp; Benatallah, B. (2016). Dimensions for evaluating cloud resource orchestration frameworks. Computer, 49(2), 24-33.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.infosys.tuwien.ac.at/staff/sd/papers/Zeitschriftenartikel%202015%20S.%20Dustdar%20Cloud%20Resource.pdf&#34;&gt;Ranjan, R., Benatallah, B., Dustdar, S., &amp;amp; Papazoglou, M. P. (2015). Cloud resource orchestration programming: overview, issues, and directions. IEEE Internet Computing, 19(5), 46-56.
-&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.researchgate.net/profile/Athanasios_Tsitsipas/publication/290429973_Cloud_Orchestration_Features_Are_Tools_Fit_for_Purpose/links/58c0367b92851cbfd30bbfd3/Cloud-Orchestration-Features-Are-Tools-Fit-for-Purpose.pdf&#34;&gt;Baur, D., Seybold, D., Griesinger, F., Tsitsipas, A., Hauser, C. B., &amp;amp; Domaschka, J. (2015, December). Cloud orchestration features: Are tools fit for purpose?. In Utility and Cloud Computing (UCC), 2015 IEEE/ACM 8th International Conference on (pp. 95-101). IEEE.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.the-paper-trail.org/post/2008-08-13-a-brief-tour-of-flp-impossibility/&#34;&gt;A Brief Tour of FLP Impossibility&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=r6DZH7ETG5M&#34;&gt;5.13 Paxos: The FLP Proof 20:36&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.dtic.mil/dtic/tr/fulltext/u2/a120161.pdf&#34;&gt;Fischer, M. J., Lynch, N. A., &amp;amp; Paterson, M. S. (1982). Impossibility of Distributed Consensus with One Fault Process (No. RR-245). YALE UNIV NEW HAVEN CT DEPT OF COMPUTER SCIENCE.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://book.mixu.net/distsys/&#34;&gt;Distributed systems for fun and profit&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/0909.1788.pdf&#34;&gt;Helland, P., &amp;amp; Campbell, D. (2009). Building on quicksand. arXiv preprint arXiv:0909.1788.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=srOgpXECblk&#34;&gt;Google I/O 2009 - Transactions Across Datacenters..&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=XUQJvMALfUA&#34;&gt;Distributed Consensus Making Impossible Possible - Heidi Howard - JOTB16&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=YbZ3zDzDnrw&#34;&gt;Raft lecture (Raft user study)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h6 id=&#34;future-work&#34;&gt;Future Work&lt;/h6&gt;
-
-&lt;p&gt;I want to get familiar with LaTex again (I used it in my undergraduate studies a bit but I need to re-learn it) and also read &lt;a href=&#34;https://ecommons.cornell.edu/bitstream/handle/1813/6567/86-727.pdf?sequence=1&#34;&gt;Alpern, B., &amp;amp; Schneider, F. B. (1987). Recognizing safety and liveness. Distributed computing, 2(3), 117-126.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, I had to make my homework repository private (there were some incidents where somebody presented my work) and I can&amp;rsquo;t link the work now, but I will think if I can make it public again or start another one with only the work from my master degree.&lt;/p&gt;</content>
       
     </item>
     
@@ -238,7 +239,6 @@ Next week I&amp;rsquo;ll have to write a python wrapper that will feed various p
       <description></description>
       
       <content>&lt;p&gt;List with various slides and presentations.&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://openstack-slides.mateimicu.com&#34;&gt;OpenStack&lt;/a&gt; introduction and how the projects and components are structured. At the end present how we integrated with it in the &lt;a href=&#34;https://github.com/cloudbase/cloudbase-init-ci&#34;&gt;Argus&lt;/a&gt; project tot test &lt;a href=&#34;https://github.com/openstack/cloudbase-init&#34;&gt;CloudBase-Init&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://k8s-volumes-secrets-deployments.mateimicu.com/&#34;&gt;Kubernets Deployments, Volumes, Secrets, ConfigMaps&lt;/a&gt;&lt;/li&gt;
@@ -256,34 +256,27 @@ Next week I&amp;rsquo;ll have to write a python wrapper that will feed various p
       <description></description>
       
       <content>&lt;p&gt;How to create more Networks in Virtualbox.&lt;/p&gt;
-
 &lt;p&gt;Go to :
 &lt;strong&gt;File -&amp;gt; Preferences&amp;hellip; -&amp;gt; Network&lt;/strong&gt;
-&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/01-preferences.png&#34; alt=&#34;Preferences in VirtualBox&#34; /&gt;&lt;/p&gt;
-
+&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/01-preferences.png&#34; alt=&#34;Preferences in VirtualBox&#34;&gt;&lt;/p&gt;
 &lt;p&gt;You will find two tabs:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;NAT Networks&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;NAT Networks&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/02-nat-tab.png&#34; alt=&#34;NAT networks settings VirtualBox&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Host-only Networks&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/03-host-only-tab.png&#34; alt=&#34;Host-Only networks settings VirtualBox&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/02-nat-tab.png&#34; alt=&#34;NAT networks settings VirtualBox&#34; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Host-only Networks&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/03-host-only-tab.png&#34; alt=&#34;Host-Only networks settings VirtualBox&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;You can use the &lt;strong&gt;+&lt;/strong&gt; button to add more networks or the &lt;strong&gt;Edit&lt;/strong&gt; button to find out informations like:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;IP Addresses&lt;/li&gt;
 &lt;li&gt;Network Masks&lt;/li&gt;
 &lt;li&gt;If DHCP is enabled&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/04-network-details.png&#34; alt=&#34;Network Details for VirtualBox&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://mateimicu.com/img//create-virtualbox-networks/04-network-details.png&#34; alt=&#34;Network Details for VirtualBox&#34;&gt;&lt;/p&gt;
 </content>
       
     </item>
@@ -296,16 +289,10 @@ Next week I&amp;rsquo;ll have to write a python wrapper that will feed various p
       <guid>http://mateimicu.com/install-openstack-rdo/</guid>
       <description></description>
       
-      <content>
-
-&lt;p&gt;Install &lt;a href=&#34;1&#34;&gt;RedHat Deployment of OpenStack&lt;/a&gt; using &lt;a href=&#34;2&#34;&gt;Packstack&lt;/a&gt;.&lt;/p&gt;
-
+      <content>&lt;p&gt;Install &lt;a href=&#34;1&#34;&gt;RedHat Deployment of OpenStack&lt;/a&gt; using &lt;a href=&#34;2&#34;&gt;Packstack&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Packstack&lt;/strong&gt; is a wrapper over a collection of Puppet manifests that install a specific &lt;a href=&#34;3&#34;&gt;release of OpenStack&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;prerequisite-s&#34;&gt;Prerequisite&amp;rsquo;s&lt;/h2&gt;
-
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisite&amp;rsquo;s&lt;/h2&gt;
 &lt;p&gt;A virtual Machine with &lt;a href=&#34;4&#34;&gt;CentOS 7 Minimal&lt;/a&gt; with the following configurations:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;at least one NAT network&lt;/li&gt;
 &lt;li&gt;at least one Host-Only network&lt;/li&gt;
@@ -314,61 +301,40 @@ Next week I&amp;rsquo;ll have to write a python wrapper that will feed various p
 &lt;li&gt;enable nested paging&lt;/li&gt;
 &lt;li&gt;enable VT-x/AMD-v&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;You can follow &lt;a href=&#34;5&#34;&gt;this&lt;/a&gt; article to prepare it.&lt;/p&gt;
-
 &lt;p&gt;To enable support for vitalization (nested paging and VT-x/AMD-v) you can go to:
 &lt;strong&gt;Settings -&amp;gt;  System -&amp;gt; Acceleration&lt;/strong&gt;
-&lt;img src=&#34;http://mateimicu.com/img/install-openstack-rdo/01-virtualbox-enable-acceleration.png&#34; alt=&#34;Enable Virtualization Support VirtualBox&#34; /&gt;&lt;/p&gt;
-
+&lt;img src=&#34;http://mateimicu.com/img/install-openstack-rdo/01-virtualbox-enable-acceleration.png&#34; alt=&#34;Enable Virtualization Support VirtualBox&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;conventions&#34;&gt;Conventions&lt;/h2&gt;
-
 &lt;p&gt;When you have successfully booted the VM you should have at least two network interfaces:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;enp0s3&lt;/code&gt; corresponding with the NAT network&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;enp0s8&lt;/code&gt; corresponding with the Host-Only network&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;We will use the NAT network for internet access to our VM and also internet access for OpenStack networking.
 The Host-Only network will be used to connect to the VM.&lt;/p&gt;
-
 &lt;p&gt;Furthermore, I&amp;rsquo;ll assume the following conventions:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;enp0s3&lt;/code&gt; has the CIDR &lt;code&gt;10.0.2.0/24&lt;/code&gt; and the DHCP assigned IP was &lt;code&gt;10.0.2.25&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;enp0s8&lt;/code&gt; has the CIRD &lt;code&gt;192.168.99.0/24&lt;/code&gt; and the DHCP assigned IP is &lt;code&gt;192.168.99.25&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;install-packstack-and-prepare-the-system&#34;&gt;Install Packstack and prepare the system&lt;/h2&gt;
-
 &lt;p&gt;This process follows the steps form the (RDO website)&lt;a href=&#34;https://www.rdoproject.org/install/packstack/&#34;&gt;6&lt;/a&gt;.&lt;/p&gt;
-
 &lt;h3 id=&#34;setup-networking&#34;&gt;Setup Networking&lt;/h3&gt;
-
 &lt;p&gt;We need to disable the Network Manager from CentOS and configure a static IP for both interfaces&lt;/p&gt;
-
 &lt;h5 id=&#34;disable-network-manager&#34;&gt;Disable Network Manager&lt;/h5&gt;
-
 &lt;p&gt;Run the following commands&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo systemctl disable firewalld
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo systemctl disable firewalld
 ~ $ sudo systemctl stop firewalld
 ~ $ sudo systemctl disable NetworkManager
 ~ $ sudo systemctl stop NetworkManager
 ~ $ sudo systemctl enable network
 ~ $ sudo systemctl start network
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;setup-static-ip&#34;&gt;Setup static IP&lt;/h5&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;setup-static-ip&#34;&gt;Setup static IP&lt;/h5&gt;
 &lt;p&gt;Because we disabled the Network Manager we can&amp;rsquo;t use (nmcli)&lt;a href=&#34;https://developer.gnome.org/NetworkManager/unstable/nmcli.html&#34;&gt;7&lt;/a&gt; to configure network interfaces.
 We will have to rely on the classic network scrips found in &lt;code&gt;/etc/sysconfig/network-scripts/&lt;/code&gt;&lt;/p&gt;
-
 &lt;p&gt;You can use &lt;code&gt;vi&lt;/code&gt; or &lt;code&gt;nano&lt;/code&gt; to edit the configurations.&lt;/p&gt;
-
 &lt;p&gt;For the NAT network the configuration (found at &lt;code&gt;/etc/sysconfig/network-scripts/ifcfg-enp0s3&lt;/code&gt;) should look like this:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -390,31 +356,19 @@ NETMASK=255.255.255.0
 GATEWAY=10.0.2.2
 DNS1=8.8.8.8
 DNS2=8.8.4.4
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For a better understanding I&amp;rsquo;ll explain the required changes:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For a better understanding I&amp;rsquo;ll explain the required changes:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;BOOTPROTO=static&lt;/code&gt; this was changed from DHCP, it means we want to set up a static IP not to
 ask a DHCP service for one;&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;ONBOOT=yes&lt;/code&gt; this device will be activated at boot time;&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;IPADDR=10.0.2.25&lt;/code&gt; what IP address we want to use. &lt;strong&gt;Notice&lt;/strong&gt; this is in the same range
 we assumed in the &lt;a href=&#34;#conventions&#34;&gt;Convention&lt;/a&gt; section.&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;NETMASK=255.255.255.0&lt;/code&gt; the netmask for our network. &lt;strong&gt;Notice&lt;/strong&gt; this is in the same &lt;code&gt;/24&lt;/code&gt;
 we assumed in the &lt;a href=&#34;#conventions&#34;&gt;Convention&lt;/a&gt; section.&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;GATEWAY=10.0.2.2&lt;/code&gt; what gateway to use in our network, &lt;code&gt;.2&lt;/code&gt; is the default in VirtualBox.&lt;/p&gt;
-
 &lt;p&gt;We configure the &lt;code&gt;DNS&lt;/code&gt; to use the ones provided by google.&lt;/p&gt;
-
 &lt;p&gt;More information about the network scripts can be found on the &lt;a href=&#34;8&#34;&gt;centos website&lt;/a&gt;.&lt;/p&gt;
-
-&lt;hr /&gt;
-
+&lt;hr&gt;
 &lt;p&gt;For the Host-Only network the configuration (found at &lt;code&gt;/etc/sysconfig/network-scripts/ifcfg-enp0s8&lt;/code&gt;) should look like this:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -435,70 +389,38 @@ ONBOOT=yes
 IPADDR=192.168.99.25
 NETMASK=255.255.255.0
 GATEWAY=192.168.99.2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The same parameters as the NAT network were configured. We only omitted the &lt;code&gt;DNS&lt;/code&gt;, this network has no Internet Connectivity
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The same parameters as the NAT network were configured. We only omitted the &lt;code&gt;DNS&lt;/code&gt;, this network has no Internet Connectivity
 and DNS settings are not required.&lt;/p&gt;
-
 &lt;p&gt;To find more about networking in VirtualBox you can read &lt;a href=&#34;http://mateimicu.com/posts/create-virtualbox-networks&#34;&gt;this&lt;/a&gt; article.&lt;/p&gt;
-
 &lt;p&gt;Now you need to apply the configurations to both interfaces:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo ifdown enp0s3
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo ifdown enp0s3
 ~ $ sudo ifdown enp0s8
 ~ $ sudo ifup enp0s3
 ~ $ sudo ifup enp0s8
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now you should be able to connect to the instance&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you should be able to connect to the instance&lt;/p&gt;
 &lt;h3 id=&#34;setup-ssh&#34;&gt;Setup SSH&lt;/h3&gt;
-
 &lt;p&gt;You need to install the SSH server&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo yum install -y vim openssh-server
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo yum install -y vim openssh-server
 ~ $ sudo systemctl start sshd
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now you should be able to connect with ssh to that instance.&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you should be able to connect with ssh to that instance.&lt;/p&gt;
 &lt;p&gt;From the Host machine (your laptop) try to connect with ssh to that instance:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ ssh root@192.168.99.25
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This ssh connection is more convenient to work.&lt;/p&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ ssh root@192.168.99.25
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This ssh connection is more convenient to work.&lt;/p&gt;
 &lt;h3 id=&#34;install-packstack&#34;&gt;Install Packstack&lt;/h3&gt;
-
 &lt;p&gt;Install the &lt;a href=&#34;3&#34;&gt;OpenStack realizes&lt;/a&gt; you want and the packstack utility&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo yum install -y centos-release-openstack-pike
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo yum install -y centos-release-openstack-pike
 ~ $ sudo yum update -y
 ~ $ sudo yum install -y openstack-packstack
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can use any &lt;a href=&#34;3&#34;&gt;OpenStack realizes&lt;/a&gt;, I tested this with Newton(that is deprecated) and Pike.&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use any &lt;a href=&#34;3&#34;&gt;OpenStack realizes&lt;/a&gt;, I tested this with Newton(that is deprecated) and Pike.&lt;/p&gt;
 &lt;h3 id=&#34;install-openstack&#34;&gt;Install Openstack&lt;/h3&gt;
-
 &lt;h4 id=&#34;simple-all-in-one-deployment&#34;&gt;Simple All In One deployment&lt;/h4&gt;
-
 &lt;p&gt;Now we provision the OpenStack cluster using Packstack on this instance with default services and configurations.&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;~ $ packstack --allinone --ntp-servers=pool.ntp.org
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;using-an-answer-file&#34;&gt;Using an answer file&lt;/h4&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;using-an-answer-file&#34;&gt;Using an answer file&lt;/h4&gt;
 &lt;p&gt;You can generate an answer file with the following command:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ packstack --gen-answer-file=~/answers-file.txt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If we look at this file we can see all the configuration used by the Packstack utility.
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ packstack --gen-answer-file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;~/answers-file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we look at this file we can see all the configuration used by the Packstack utility.
 Some configuration that might be helpful for a simple deployment might be:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;CONFIG_SWIFT_INSTALL=n
 CONFIG_CEILOMETER_INSTALL=n
 CONFIG_AODH_INSTALL=n
@@ -507,20 +429,12 @@ CONFIG_HEAT_INSTALL=y
 CONFIG_NTP_SERVERS=pool.ntp.org
 CONFIG_NAGIOS_INSTALL=n
 CONFIG_DEBUG_MODE=y
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Run the utility with this settings&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ packstack --answer-file==~/answers-file.txt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;access-horizon&#34;&gt;Access Horizon&lt;/h3&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run the utility with this settings&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ packstack --answer-file&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;~/answers-file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;access-horizon&#34;&gt;Access Horizon&lt;/h3&gt;
 &lt;p&gt;To access the OpenStack deployment you first need to allow access to &lt;code&gt;httpd&lt;/code&gt; from the private ip.&lt;/p&gt;
-
 &lt;p&gt;Edit the file &lt;code&gt;/etc/httpd/conf.d/15-horizon_vhost.conf&lt;/code&gt; and replace all occurrence&amp;rsquo;s of &lt;code&gt;ServerAlias&lt;/code&gt; with just one &lt;code&gt;ServerAlias *&lt;/code&gt;.
 It should look like this (this is just the snipper)&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;...
 
   ## Server aliases
@@ -529,31 +443,20 @@ It should look like this (this is just the snipper)&lt;/p&gt;
   WSGIDaemonProcess apache group=apache processes=3 threads=10 user=apache
 ...
 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can now access the dashboard using the private ip (in our example &lt;code&gt;192.168.99.25&lt;/code&gt;).
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now access the dashboard using the private ip (in our example &lt;code&gt;192.168.99.25&lt;/code&gt;).
 The credential can be found in one of the files &lt;code&gt;keystonerc_admin&lt;/code&gt; or &lt;code&gt;keystonerc_admin&lt;/code&gt;.&lt;/p&gt;
-
 &lt;h3 id=&#34;troubleshooting&#34;&gt;Troubleshooting&lt;/h3&gt;
-
 &lt;p&gt;When the packer utility finishes, it will give you information about the status of the deployment and the location of the logs.
 It might look something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ERROR : Error appeared during Puppet run: 10.0.2.30_controller.pp
-Error: Execution of &#39;/usr/bin/rpm -e mariadb-server-10.1.20-1.el7.x86_64&#39; returned 1: error: Failed dependencies:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ERROR : Error appeared during Puppet run: 10.0.2.30_controller.pp
+Error: Execution of &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/usr/bin/rpm -e mariadb-server-10.1.20-1.el7.x86_64&amp;#39;&lt;/span&gt; returned 1: error: Failed dependencies:
 You will find full trace in log /var/tmp/packstack/20180422-164044-c2KzyF/manifests/10.0.2.30_controller.pp.log
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can usually fix the problem by installing/removing some package that has a problem or change some configuration in your
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can usually fix the problem by installing/removing some package that has a problem or change some configuration in your
 answer file. After you fixed the problem you can run the &lt;code&gt;packstack&lt;/code&gt; command with the &lt;code&gt;--answer-file&lt;/code&gt; parameter to install Openstack.&lt;/p&gt;
-
 &lt;p&gt;You can also run &lt;code&gt;packstack&lt;/code&gt; in debug mode with the flag &lt;code&gt;--debug&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;You can list all the Openstack services with the following command:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ systemctl list-units openstack-*
-&lt;/code&gt;&lt;/pre&gt;
-</content>
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ systemctl list-units openstack-*
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
       
     </item>
     
@@ -565,74 +468,40 @@ answer file. After you fixed the problem you can run the &lt;code&gt;packstack&l
       <guid>http://mateimicu.com/install-openstack-labs/</guid>
       <description></description>
       
-      <content>
-
-&lt;p&gt;Openstack Training Labs is a python project that installs a new OpenStack cluster in two virtual machines.
+      <content>&lt;p&gt;Openstack Training Labs is a python project that installs a new OpenStack cluster in two virtual machines.
 It is an easy way to provision a working deployment for testing/development purposes.&lt;/p&gt;
-
 &lt;p&gt;It works like docker-machine or boot2docker:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;spawn two VM&amp;rsquo;s using a guest Hyper-visor (supports VirtualBox and KVM)&lt;/li&gt;
 &lt;li&gt;copy bash scripts in the machine and run it (this will install the OpenStack Components)&lt;/li&gt;
 &lt;li&gt;port-forward some services from the NAT provided by the Hyper-visor to the guest machine&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;All the documentation can be found &lt;a href=&#34;1&#34;&gt;here&lt;/a&gt;, it goes in greater details about the setup.&lt;/p&gt;
-
 &lt;h2 id=&#34;step-by-step-guide&#34;&gt;Step by Step Guide&lt;/h2&gt;
-
 &lt;p&gt;Following the provided documentation on a&lt;/p&gt;
-
 &lt;h5 id=&#34;install-dependency&#34;&gt;Install dependency&lt;/h5&gt;
-
 &lt;p&gt;To use this project we need to have a few dependencies satisfied:&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;VirtualBox&lt;/strong&gt;&lt;/p&gt;
-
 &lt;p&gt;This will install the VirtualBox utility and a graphical Interface that we can use&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo apt-get install virtualbox virtualbox-qt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Git&lt;/strong&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo apt-get git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Python&lt;/strong&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo apt-get install virtualbox virtualbox-qt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Git&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo apt-get git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Python&lt;/strong&gt;
 This is usually already installed in most distributions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ sudo apt-get install python2.7
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;clone-the-project&#34;&gt;Clone the project&lt;/h5&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ sudo apt-get install python2.7
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;clone-the-project&#34;&gt;Clone the project&lt;/h5&gt;
 &lt;p&gt;The project is hosted on &lt;a href=&#34;2&#34;&gt;Gerrit&lt;/a&gt; but all the OpenStack project have mirrors on &lt;a href=&#34;3&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ git clone https://github.com/openstack/training-labs.git
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ git clone https://github.com/openstack/training-labs.git
 ~ $ cd training-labs/labs
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We need to use the latest release of OpenStack.(You can check the OpenStack releases &lt;a href=&#34;https://releases.openstack.org/&#34;&gt;here&lt;/a&gt;)&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We need to use the latest release of OpenStack.(You can check the OpenStack releases &lt;a href=&#34;https://releases.openstack.org/&#34;&gt;here&lt;/a&gt;)&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;~ $ git checkout stable/queens
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;start-the-cluster&#34;&gt;Start the cluster&lt;/h5&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;h5 id=&#34;start-the-cluster&#34;&gt;Start the cluster&lt;/h5&gt;
 &lt;p&gt;We should have a tree structure like this&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ ls
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ ls
 autostart  config  lib  log  osbash  scripts  stacktrain  st.py  tests  tools  wbatch
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can run the provisioning with the following command&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ ./st.py --verbose --gui gui --provider virtualbox --build cluster
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This process may take some time depending on your hardware and network speed.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can run the provisioning with the following command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ ./st.py --verbose --gui gui --provider virtualbox --build cluster
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This process may take some time depending on your hardware and network speed.&lt;/p&gt;
 </content>
       
     </item>
@@ -646,29 +515,23 @@ autostart  config  lib  log  osbash  scripts  stacktrain  st.py  tests  tools  w
       <description></description>
       
       <content>&lt;p&gt;When learning docker an interesting question you may have is: &lt;strong&gt;What happens with commands that install software when rebuilding an image&lt;/strong&gt;.&lt;/p&gt;
-
 &lt;p&gt;Let&amp;rsquo;s give a scenario:&lt;/p&gt;
-
 &lt;p&gt;You create a simple docker file like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;FROM python:2.7-slim
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;FROM python:2.7-slim
+&lt;span style=&#34;color:#75715e&#34;&gt;# Update the system&lt;/span&gt; 
+RUN apt-get update -y &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get upgrade -y
 
-# Update the system 
-RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y
-
-# add some source files
+&lt;span style=&#34;color:#75715e&#34;&gt;# add some source files&lt;/span&gt;
 ADD . /app
 
-# expose a port
-EXPOSE 80
+&lt;span style=&#34;color:#75715e&#34;&gt;# expose a port&lt;/span&gt;
+EXPOSE &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
 
-# Run app.py when the container launches
-CMD [&amp;quot;python&amp;quot;, &amp;quot;app.py&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;this is not a complete &lt;code&gt;Dockerfile&lt;/code&gt;, just the snippets we are interested in.
+&lt;span style=&#34;color:#75715e&#34;&gt;# Run app.py when the container launches&lt;/span&gt;
+CMD &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;python&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;this is not a complete &lt;code&gt;Dockerfile&lt;/code&gt;, just the snippets we are interested in.
 If we try to build this an image based on this file, we get something like this:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;Step 1/5 : FROM python:2.7-slim
 ...
 Step 2/5 : RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y
@@ -680,88 +543,67 @@ Step 4/5 : EXPOSE 80
 Step 5/5 : CMD [&amp;quot;python&amp;quot;, &amp;quot;app.py&amp;quot;]
 ...
 Successfully built 3609163bdce5
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(the output is truncated to save space).
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;(the output is truncated to save space).
 The important step is &lt;code&gt;2&lt;/code&gt; where we update the system. We can see that this will download and install new versions for the libraries that we have on the system.&lt;/p&gt;
-
 &lt;p&gt;This can pose a problem because we may rely on a specific version of the library. In other words, next time we build the image (imagine we updated the codebase and need to create a new image
 to deploy) the &lt;code&gt;apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y&lt;/code&gt; run and ruin the image (our application not handling the new libraries).&lt;/p&gt;
-
 &lt;h3 id=&#34;unionfs-to-the-rescue&#34;&gt;UnionFS to the rescue&lt;/h3&gt;
-
 &lt;p&gt;One thing to keep in mind is the way images are built/stored/transferred using a Union file system that works with layers. If I a layer is already found it will not be &amp;ldquo;compiled&amp;rdquo; again, this means that if we add a new file to our directory &lt;code&gt;echo &amp;quot;new dummy file&amp;quot; &amp;gt;&amp;gt; dummy&lt;/code&gt; and our current directory will look like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ ls
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ ls
 Dockerfile   dummy
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When running a new build:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~ $ docker build .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When running a new build:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;~ $ docker build .
 Sending build context to Docker daemon  3.072kB
 Step 1/5 : FROM python:2.7-slim
  ---&amp;gt; b0259cf63993
-Step 2/5 : RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y
+Step 2/5 : RUN apt-get update -y &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get upgrade -y
  ---&amp;gt; Using cache
  ---&amp;gt; 00414512ae60
 Step 3/5 : ADD . /app
  ---&amp;gt; 7c8266369b33
-Step 4/5 : EXPOSE 80
+Step 4/5 : EXPOSE &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
  ---&amp;gt; Running in 6bc4c5a16d2f
 Removing intermediate container 6bc4c5a16d2f
  ---&amp;gt; ae8b02e34ced
-Step 5/5 : CMD [&amp;quot;python&amp;quot;, &amp;quot;app.py&amp;quot;]
+Step 5/5 : CMD &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;python&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
  ---&amp;gt; Running in a78e73b6e1b9
 Removing intermediate container a78e73b6e1b9
  ---&amp;gt; 96dd2f890cbf
 Successfully built 96dd2f890cbf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;we can see that the step &lt;code&gt;2&lt;/code&gt; was skipped and the cached version for that layer (that runs &lt;code&gt;RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y&lt;/code&gt;) was used.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;we can see that the step &lt;code&gt;2&lt;/code&gt; was skipped and the cached version for that layer (that runs &lt;code&gt;RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y&lt;/code&gt;) was used.
 This is an important distinction to make if we build this image on the same machine (environment) where it was previously built the &lt;code&gt;RUN&lt;/code&gt; command will not be executed.&lt;/p&gt;
-
 &lt;p&gt;This helps us maintain the same OS-lvl libraries and binaries when we build images but open a new problem: &lt;strong&gt;security&lt;/strong&gt;.&lt;/p&gt;
-
 &lt;p&gt;One reason why you may want to update the libraries is to make sure you have the latest security patches.
 The build command helpfully allows us to disable the cache with the &lt;code&gt;--no-cache&lt;/code&gt; command. Running the build in this way we can see that the updates are running.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker build . --no-cache
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build . --no-cache
 Sending build context to Docker daemon  3.072kB
 Step 1/5 : FROM python:2.7-slim
  ---&amp;gt; b0259cf63993
-Step 2/5 : RUN apt-get update -y &amp;amp;&amp;amp; apt-get upgrade -y
+Step 2/5 : RUN apt-get update -y &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get upgrade -y
  ---&amp;gt; Running in cce3fb472a18
-Get:1 http://security.debian.org jessie/updates InRelease [63.1 kB]
-Get:2 http://security.debian.org jessie/updates/main amd64 Packages [588 kB]
+Get:1 http://security.debian.org jessie/updates InRelease &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;63.1 kB&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+Get:2 http://security.debian.org jessie/updates/main amd64 Packages &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;588&lt;/span&gt; kB&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
 ...
 ...
  ---&amp;gt; 1dc0f9d842b1
 Step 3/5 : ADD . /app
  ---&amp;gt; 597a83647250
-Step 4/5 : EXPOSE 80
+Step 4/5 : EXPOSE &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
  ---&amp;gt; Running in 4e0da110e6f4
 Removing intermediate container 4e0da110e6f4
  ---&amp;gt; 8159270ed233
-Step 5/5 : CMD [&amp;quot;python&amp;quot;, &amp;quot;app.py&amp;quot;]
+Step 5/5 : CMD &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;python&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
  ---&amp;gt; Running in 8c3928f25d7a
 Removing intermediate container 8c3928f25d7a
  ---&amp;gt; 4eb0161a51ab
 Successfully built 4eb0161a51ab
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the &lt;strong&gt;required&lt;/strong&gt; dependencies.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the &lt;strong&gt;required&lt;/strong&gt; dependencies.
 Thankfully most containers don&amp;rsquo;t and &lt;strong&gt;shouldn&amp;rsquo;t&lt;/strong&gt; be exposed to the internet. This minimizes the attack vectors a bad actor can use.&lt;/p&gt;
-
 &lt;h3 id=&#34;caching&#34;&gt;Caching&lt;/h3&gt;
-
 &lt;p&gt;Another problem with &lt;code&gt;apt-get&lt;/code&gt; in a container is the caching problem. You can&amp;rsquo;t have a docker file that looks like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;RUN apt-get update -y
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;RUN apt-get update -y
 RUN apt-get upgrade -y
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The first command will use a cache that is not shared with the second command; this is a good reason why you should chain them using bash &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;.&lt;/p&gt;</content>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first command will use a cache that is not shared with the second command; this is a good reason why you should chain them using bash &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;.&lt;/p&gt;</content>
       
     </item>
     

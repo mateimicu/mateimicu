@@ -95,29 +95,23 @@
     
     <div class="content">
       <p>When learning docker an interesting question you may have is: <strong>What happens with commands that install software when rebuilding an image</strong>.</p>
-
 <p>Let&rsquo;s give a scenario:</p>
-
 <p>You create a simple docker file like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">FROM python:2.7-slim
 
-<pre><code class="language-bash">FROM python:2.7-slim
+<span style="color:#75715e"># Update the system</span> 
+RUN apt-get update -y <span style="color:#f92672">&amp;&amp;</span> apt-get upgrade -y
 
-# Update the system 
-RUN apt-get update -y &amp;&amp; apt-get upgrade -y
-
-# add some source files
+<span style="color:#75715e"># add some source files</span>
 ADD . /app
 
-# expose a port
-EXPOSE 80
+<span style="color:#75715e"># expose a port</span>
+EXPOSE <span style="color:#ae81ff">80</span>
 
-# Run app.py when the container launches
-CMD [&quot;python&quot;, &quot;app.py&quot;]
-</code></pre>
-
-<p>this is not a complete <code>Dockerfile</code>, just the snippets we are interested in.
+<span style="color:#75715e"># Run app.py when the container launches</span>
+CMD <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;python&#34;</span>, <span style="color:#e6db74">&#34;app.py&#34;</span><span style="color:#f92672">]</span>
+</code></pre></div><p>this is not a complete <code>Dockerfile</code>, just the snippets we are interested in.
 If we try to build this an image based on this file, we get something like this:</p>
-
 <pre><code>Step 1/5 : FROM python:2.7-slim
 ...
 Step 2/5 : RUN apt-get update -y &amp;&amp; apt-get upgrade -y
@@ -129,88 +123,67 @@ Step 4/5 : EXPOSE 80
 Step 5/5 : CMD [&quot;python&quot;, &quot;app.py&quot;]
 ...
 Successfully built 3609163bdce5
-</code></pre>
-
-<p>(the output is truncated to save space).
+</code></pre><p>(the output is truncated to save space).
 The important step is <code>2</code> where we update the system. We can see that this will download and install new versions for the libraries that we have on the system.</p>
-
 <p>This can pose a problem because we may rely on a specific version of the library. In other words, next time we build the image (imagine we updated the codebase and need to create a new image
 to deploy) the <code>apt-get update -y &amp;&amp; apt-get upgrade -y</code> run and ruin the image (our application not handling the new libraries).</p>
-
 <h3 id="unionfs-to-the-rescue">UnionFS to the rescue</h3>
-
 <p>One thing to keep in mind is the way images are built/stored/transferred using a Union file system that works with layers. If I a layer is already found it will not be &ldquo;compiled&rdquo; again, this means that if we add a new file to our directory <code>echo &quot;new dummy file&quot; &gt;&gt; dummy</code> and our current directory will look like this:</p>
-
-<pre><code class="language-bash">~ $ ls
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ ls
 Dockerfile   dummy
-</code></pre>
-
-<p>When running a new build:</p>
-
-<pre><code class="language-bash">~ $ docker build .
+</code></pre></div><p>When running a new build:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ docker build .
 Sending build context to Docker daemon  3.072kB
 Step 1/5 : FROM python:2.7-slim
  ---&gt; b0259cf63993
-Step 2/5 : RUN apt-get update -y &amp;&amp; apt-get upgrade -y
+Step 2/5 : RUN apt-get update -y <span style="color:#f92672">&amp;&amp;</span> apt-get upgrade -y
  ---&gt; Using cache
  ---&gt; 00414512ae60
 Step 3/5 : ADD . /app
  ---&gt; 7c8266369b33
-Step 4/5 : EXPOSE 80
+Step 4/5 : EXPOSE <span style="color:#ae81ff">80</span>
  ---&gt; Running in 6bc4c5a16d2f
 Removing intermediate container 6bc4c5a16d2f
  ---&gt; ae8b02e34ced
-Step 5/5 : CMD [&quot;python&quot;, &quot;app.py&quot;]
+Step 5/5 : CMD <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;python&#34;</span>, <span style="color:#e6db74">&#34;app.py&#34;</span><span style="color:#f92672">]</span>
  ---&gt; Running in a78e73b6e1b9
 Removing intermediate container a78e73b6e1b9
  ---&gt; 96dd2f890cbf
 Successfully built 96dd2f890cbf
-</code></pre>
-
-<p>we can see that the step <code>2</code> was skipped and the cached version for that layer (that runs <code>RUN apt-get update -y &amp;&amp; apt-get upgrade -y</code>) was used.
+</code></pre></div><p>we can see that the step <code>2</code> was skipped and the cached version for that layer (that runs <code>RUN apt-get update -y &amp;&amp; apt-get upgrade -y</code>) was used.
 This is an important distinction to make if we build this image on the same machine (environment) where it was previously built the <code>RUN</code> command will not be executed.</p>
-
 <p>This helps us maintain the same OS-lvl libraries and binaries when we build images but open a new problem: <strong>security</strong>.</p>
-
 <p>One reason why you may want to update the libraries is to make sure you have the latest security patches.
 The build command helpfully allows us to disable the cache with the <code>--no-cache</code> command. Running the build in this way we can see that the updates are running.</p>
-
-<pre><code class="language-bash">docker build . --no-cache
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker build . --no-cache
 Sending build context to Docker daemon  3.072kB
 Step 1/5 : FROM python:2.7-slim
  ---&gt; b0259cf63993
-Step 2/5 : RUN apt-get update -y &amp;&amp; apt-get upgrade -y
+Step 2/5 : RUN apt-get update -y <span style="color:#f92672">&amp;&amp;</span> apt-get upgrade -y
  ---&gt; Running in cce3fb472a18
-Get:1 http://security.debian.org jessie/updates InRelease [63.1 kB]
-Get:2 http://security.debian.org jessie/updates/main amd64 Packages [588 kB]
+Get:1 http://security.debian.org jessie/updates InRelease <span style="color:#f92672">[</span>63.1 kB<span style="color:#f92672">]</span>
+Get:2 http://security.debian.org jessie/updates/main amd64 Packages <span style="color:#f92672">[</span><span style="color:#ae81ff">588</span> kB<span style="color:#f92672">]</span>
 ...
 ...
  ---&gt; 1dc0f9d842b1
 Step 3/5 : ADD . /app
  ---&gt; 597a83647250
-Step 4/5 : EXPOSE 80
+Step 4/5 : EXPOSE <span style="color:#ae81ff">80</span>
  ---&gt; Running in 4e0da110e6f4
 Removing intermediate container 4e0da110e6f4
  ---&gt; 8159270ed233
-Step 5/5 : CMD [&quot;python&quot;, &quot;app.py&quot;]
+Step 5/5 : CMD <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;python&#34;</span>, <span style="color:#e6db74">&#34;app.py&#34;</span><span style="color:#f92672">]</span>
  ---&gt; Running in 8c3928f25d7a
 Removing intermediate container 8c3928f25d7a
  ---&gt; 4eb0161a51ab
 Successfully built 4eb0161a51ab
-</code></pre>
-
-<p>Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the <strong>required</strong> dependencies.
+</code></pre></div><p>Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the <strong>required</strong> dependencies.
 Thankfully most containers don&rsquo;t and <strong>shouldn&rsquo;t</strong> be exposed to the internet. This minimizes the attack vectors a bad actor can use.</p>
-
 <h3 id="caching">Caching</h3>
-
 <p>Another problem with <code>apt-get</code> in a container is the caching problem. You can&rsquo;t have a docker file that looks like this:</p>
-
-<pre><code class="language-bash">RUN apt-get update -y
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">RUN apt-get update -y
 RUN apt-get upgrade -y
-</code></pre>
-
-<p>The first command will use a cache that is not shared with the second command; this is a good reason why you should chain them using bash <code>&amp;&amp;</code>.</p>
+</code></pre></div><p>The first command will use a cache that is not shared with the second command; this is a good reason why you should chain them using bash <code>&amp;&amp;</code>.</p>
       
       <div class="related">
 </div>

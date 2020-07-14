@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>WAD on mateimicu</title>
@@ -19,16 +19,6 @@
       <guid>http://mateimicu.com/masters-degree-02/</guid>
       <description>&lt;p&gt;Update for the first year, it wasn&amp;rsquo;t quite weekly like mentioned in the last post ;).
 Because some time passed I&amp;rsquo;ll only give a short summary.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Masters Degree week#1 - week#4</title>
-      <link>http://mateimicu.com/masters-degree-01/</link>
-      <pubDate>Sun, 28 Oct 2018 20:03:53 +0200</pubDate>
-      
-      <guid>http://mateimicu.com/masters-degree-01/</guid>
-      <description>&lt;p&gt;In this series of posts, I&amp;rsquo;ll try to keep a weekly summary of my progress in my master&amp;rsquo;s degree.
-If somebody finds this on the internet, I just started a master&amp;rsquo;s degree that focuses on distributed systems at &lt;a href=&#34;https://www.info.uaic.ro/bin/Main/&#34;&gt;Faculty Of Computer Science&lt;/a&gt;(part of &lt;a href=&#34;http://www.uaic.ro/&#34;&gt;University Alexandu Ioan Cuza&lt;/a&gt;).&lt;/p&gt;</description>
     </item>
     
   </channel>

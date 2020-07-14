@@ -98,16 +98,10 @@ To enable support for vitalization (nested paging and VT-x/AMD-v) you can go to:
     <h1 class="title">Install Openstack RDO</h1>
     
     <div class="content">
-      
-
-<p>Install <a href="1">RedHat Deployment of OpenStack</a> using <a href="2">Packstack</a>.</p>
-
+      <p>Install <a href="1">RedHat Deployment of OpenStack</a> using <a href="2">Packstack</a>.</p>
 <p><strong>Packstack</strong> is a wrapper over a collection of Puppet manifests that install a specific <a href="3">release of OpenStack</a></p>
-
-<h2 id="prerequisite-s">Prerequisite&rsquo;s</h2>
-
+<h2 id="prerequisites">Prerequisite&rsquo;s</h2>
 <p>A virtual Machine with <a href="4">CentOS 7 Minimal</a> with the following configurations:</p>
-
 <ul>
 <li>at least one NAT network</li>
 <li>at least one Host-Only network</li>
@@ -116,61 +110,40 @@ To enable support for vitalization (nested paging and VT-x/AMD-v) you can go to:
 <li>enable nested paging</li>
 <li>enable VT-x/AMD-v</li>
 </ul>
-
 <p>You can follow <a href="5">this</a> article to prepare it.</p>
-
 <p>To enable support for vitalization (nested paging and VT-x/AMD-v) you can go to:
 <strong>Settings -&gt;  System -&gt; Acceleration</strong>
-<img src="/img/install-openstack-rdo/01-virtualbox-enable-acceleration.png" alt="Enable Virtualization Support VirtualBox" /></p>
-
+<img src="/img/install-openstack-rdo/01-virtualbox-enable-acceleration.png" alt="Enable Virtualization Support VirtualBox"></p>
 <h2 id="conventions">Conventions</h2>
-
 <p>When you have successfully booted the VM you should have at least two network interfaces:</p>
-
 <ul>
 <li><code>enp0s3</code> corresponding with the NAT network</li>
 <li><code>enp0s8</code> corresponding with the Host-Only network</li>
 </ul>
-
 <p>We will use the NAT network for internet access to our VM and also internet access for OpenStack networking.
 The Host-Only network will be used to connect to the VM.</p>
-
 <p>Furthermore, I&rsquo;ll assume the following conventions:</p>
-
 <ul>
 <li><code>enp0s3</code> has the CIDR <code>10.0.2.0/24</code> and the DHCP assigned IP was <code>10.0.2.25</code></li>
 <li><code>enp0s8</code> has the CIRD <code>192.168.99.0/24</code> and the DHCP assigned IP is <code>192.168.99.25</code></li>
 </ul>
-
 <h2 id="install-packstack-and-prepare-the-system">Install Packstack and prepare the system</h2>
-
 <p>This process follows the steps form the (RDO website)<a href="https://www.rdoproject.org/install/packstack/">6</a>.</p>
-
 <h3 id="setup-networking">Setup Networking</h3>
-
 <p>We need to disable the Network Manager from CentOS and configure a static IP for both interfaces</p>
-
 <h5 id="disable-network-manager">Disable Network Manager</h5>
-
 <p>Run the following commands</p>
-
-<pre><code class="language-bash">~ $ sudo systemctl disable firewalld
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo systemctl disable firewalld
 ~ $ sudo systemctl stop firewalld
 ~ $ sudo systemctl disable NetworkManager
 ~ $ sudo systemctl stop NetworkManager
 ~ $ sudo systemctl enable network
 ~ $ sudo systemctl start network
-</code></pre>
-
-<h5 id="setup-static-ip">Setup static IP</h5>
-
+</code></pre></div><h5 id="setup-static-ip">Setup static IP</h5>
 <p>Because we disabled the Network Manager we can&rsquo;t use (nmcli)<a href="https://developer.gnome.org/NetworkManager/unstable/nmcli.html">7</a> to configure network interfaces.
 We will have to rely on the classic network scrips found in <code>/etc/sysconfig/network-scripts/</code></p>
-
 <p>You can use <code>vi</code> or <code>nano</code> to edit the configurations.</p>
-
 <p>For the NAT network the configuration (found at <code>/etc/sysconfig/network-scripts/ifcfg-enp0s3</code>) should look like this:</p>
-
 <pre><code>TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -192,31 +165,19 @@ NETMASK=255.255.255.0
 GATEWAY=10.0.2.2
 DNS1=8.8.8.8
 DNS2=8.8.4.4
-</code></pre>
-
-<p>For a better understanding I&rsquo;ll explain the required changes:</p>
-
+</code></pre><p>For a better understanding I&rsquo;ll explain the required changes:</p>
 <p><code>BOOTPROTO=static</code> this was changed from DHCP, it means we want to set up a static IP not to
 ask a DHCP service for one;</p>
-
 <p><code>ONBOOT=yes</code> this device will be activated at boot time;</p>
-
 <p><code>IPADDR=10.0.2.25</code> what IP address we want to use. <strong>Notice</strong> this is in the same range
 we assumed in the <a href="#conventions">Convention</a> section.</p>
-
 <p><code>NETMASK=255.255.255.0</code> the netmask for our network. <strong>Notice</strong> this is in the same <code>/24</code>
 we assumed in the <a href="#conventions">Convention</a> section.</p>
-
 <p><code>GATEWAY=10.0.2.2</code> what gateway to use in our network, <code>.2</code> is the default in VirtualBox.</p>
-
 <p>We configure the <code>DNS</code> to use the ones provided by google.</p>
-
 <p>More information about the network scripts can be found on the <a href="8">centos website</a>.</p>
-
-<hr />
-
+<hr>
 <p>For the Host-Only network the configuration (found at <code>/etc/sysconfig/network-scripts/ifcfg-enp0s8</code>) should look like this:</p>
-
 <pre><code>TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -237,70 +198,38 @@ ONBOOT=yes
 IPADDR=192.168.99.25
 NETMASK=255.255.255.0
 GATEWAY=192.168.99.2
-</code></pre>
-
-<p>The same parameters as the NAT network were configured. We only omitted the <code>DNS</code>, this network has no Internet Connectivity
+</code></pre><p>The same parameters as the NAT network were configured. We only omitted the <code>DNS</code>, this network has no Internet Connectivity
 and DNS settings are not required.</p>
-
 <p>To find more about networking in VirtualBox you can read <a href="/posts/create-virtualbox-networks">this</a> article.</p>
-
 <p>Now you need to apply the configurations to both interfaces:</p>
-
-<pre><code class="language-bash">~ $ sudo ifdown enp0s3
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo ifdown enp0s3
 ~ $ sudo ifdown enp0s8
 ~ $ sudo ifup enp0s3
 ~ $ sudo ifup enp0s8
-</code></pre>
-
-<p>Now you should be able to connect to the instance</p>
-
+</code></pre></div><p>Now you should be able to connect to the instance</p>
 <h3 id="setup-ssh">Setup SSH</h3>
-
 <p>You need to install the SSH server</p>
-
-<pre><code class="language-bash">~ $ sudo yum install -y vim openssh-server
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo yum install -y vim openssh-server
 ~ $ sudo systemctl start sshd
-</code></pre>
-
-<p>Now you should be able to connect with ssh to that instance.</p>
-
+</code></pre></div><p>Now you should be able to connect with ssh to that instance.</p>
 <p>From the Host machine (your laptop) try to connect with ssh to that instance:</p>
-
-<pre><code class="language-bash">~ $ ssh root@192.168.99.25
-</code></pre>
-
-<p>This ssh connection is more convenient to work.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ ssh root@192.168.99.25
+</code></pre></div><p>This ssh connection is more convenient to work.</p>
 <h3 id="install-packstack">Install Packstack</h3>
-
 <p>Install the <a href="3">OpenStack realizes</a> you want and the packstack utility</p>
-
-<pre><code class="language-bash">~ $ sudo yum install -y centos-release-openstack-pike
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ sudo yum install -y centos-release-openstack-pike
 ~ $ sudo yum update -y
 ~ $ sudo yum install -y openstack-packstack
-</code></pre>
-
-<p>You can use any <a href="3">OpenStack realizes</a>, I tested this with Newton(that is deprecated) and Pike.</p>
-
+</code></pre></div><p>You can use any <a href="3">OpenStack realizes</a>, I tested this with Newton(that is deprecated) and Pike.</p>
 <h3 id="install-openstack">Install Openstack</h3>
-
 <h4 id="simple-all-in-one-deployment">Simple All In One deployment</h4>
-
 <p>Now we provision the OpenStack cluster using Packstack on this instance with default services and configurations.</p>
-
 <pre><code>~ $ packstack --allinone --ntp-servers=pool.ntp.org
-</code></pre>
-
-<h4 id="using-an-answer-file">Using an answer file</h4>
-
+</code></pre><h4 id="using-an-answer-file">Using an answer file</h4>
 <p>You can generate an answer file with the following command:</p>
-
-<pre><code class="language-bash">~ $ packstack --gen-answer-file=~/answers-file.txt
-</code></pre>
-
-<p>If we look at this file we can see all the configuration used by the Packstack utility.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ packstack --gen-answer-file<span style="color:#f92672">=</span>~/answers-file.txt
+</code></pre></div><p>If we look at this file we can see all the configuration used by the Packstack utility.
 Some configuration that might be helpful for a simple deployment might be:</p>
-
 <pre><code>CONFIG_SWIFT_INSTALL=n
 CONFIG_CEILOMETER_INSTALL=n
 CONFIG_AODH_INSTALL=n
@@ -309,20 +238,12 @@ CONFIG_HEAT_INSTALL=y
 CONFIG_NTP_SERVERS=pool.ntp.org
 CONFIG_NAGIOS_INSTALL=n
 CONFIG_DEBUG_MODE=y
-</code></pre>
-
-<p>Run the utility with this settings</p>
-
-<pre><code class="language-bash">~ $ packstack --answer-file==~/answers-file.txt
-</code></pre>
-
-<h3 id="access-horizon">Access Horizon</h3>
-
+</code></pre><p>Run the utility with this settings</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ packstack --answer-file<span style="color:#f92672">==</span>~/answers-file.txt
+</code></pre></div><h3 id="access-horizon">Access Horizon</h3>
 <p>To access the OpenStack deployment you first need to allow access to <code>httpd</code> from the private ip.</p>
-
 <p>Edit the file <code>/etc/httpd/conf.d/15-horizon_vhost.conf</code> and replace all occurrence&rsquo;s of <code>ServerAlias</code> with just one <code>ServerAlias *</code>.
 It should look like this (this is just the snipper)</p>
-
 <pre><code>...
 
   ## Server aliases
@@ -331,31 +252,20 @@ It should look like this (this is just the snipper)</p>
   WSGIDaemonProcess apache group=apache processes=3 threads=10 user=apache
 ...
 
-</code></pre>
-
-<p>You can now access the dashboard using the private ip (in our example <code>192.168.99.25</code>).
+</code></pre><p>You can now access the dashboard using the private ip (in our example <code>192.168.99.25</code>).
 The credential can be found in one of the files <code>keystonerc_admin</code> or <code>keystonerc_admin</code>.</p>
-
 <h3 id="troubleshooting">Troubleshooting</h3>
-
 <p>When the packer utility finishes, it will give you information about the status of the deployment and the location of the logs.
 It might look something like this:</p>
-
-<pre><code class="language-bash">ERROR : Error appeared during Puppet run: 10.0.2.30_controller.pp
-Error: Execution of '/usr/bin/rpm -e mariadb-server-10.1.20-1.el7.x86_64' returned 1: error: Failed dependencies:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ERROR : Error appeared during Puppet run: 10.0.2.30_controller.pp
+Error: Execution of <span style="color:#e6db74">&#39;/usr/bin/rpm -e mariadb-server-10.1.20-1.el7.x86_64&#39;</span> returned 1: error: Failed dependencies:
 You will find full trace in log /var/tmp/packstack/20180422-164044-c2KzyF/manifests/10.0.2.30_controller.pp.log
-</code></pre>
-
-<p>You can usually fix the problem by installing/removing some package that has a problem or change some configuration in your
+</code></pre></div><p>You can usually fix the problem by installing/removing some package that has a problem or change some configuration in your
 answer file. After you fixed the problem you can run the <code>packstack</code> command with the <code>--answer-file</code> parameter to install Openstack.</p>
-
 <p>You can also run <code>packstack</code> in debug mode with the flag <code>--debug</code>.</p>
-
 <p>You can list all the Openstack services with the following command:</p>
-
-<pre><code class="language-bash">~ $ systemctl list-units openstack-*
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~ $ systemctl list-units openstack-*
+</code></pre></div>
       
       <div class="related">
 </div>
