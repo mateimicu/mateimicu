@@ -28,5 +28,8 @@ codeCopy = true
 [params.sections_right]
 "/slides" = "Slides"
 
+[params.hotjarAnalytics]
+hjid = 2229847
+
 [taxonomies]
 tag ="tags"
