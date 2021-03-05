@@ -1,4 +1,4 @@
 [submodule "themes/kiss"]
   path = themes/kiss
   url = https://github.com/mateimicu/kiss.git
-  branch = add_hotjar_support
+  branch = 29caab09da12a461c41f400a702679a8d516697a
