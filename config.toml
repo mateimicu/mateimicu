@@ -31,5 +31,8 @@ codeCopy = true
 [params.hotjarAnalytics]
 hjid = 2229847
 
+[params.clarityAnalytics]
+id = "5rbe8xe2a1"
+
 [taxonomies]
 tag ="tags"
