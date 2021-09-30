@@ -26,6 +26,7 @@ related = true
 codeCopy = true
 
 [params.sections_right]
+"/pdf/matei_marius_micu_cv.pdf" = "CV"
 "/slides" = "Slides"
 
 [params.hotjarAnalytics]
