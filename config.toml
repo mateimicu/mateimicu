@@ -26,8 +26,9 @@ related = true
 codeCopy = true
 
 [params.sections_right]
+"/workshops_and_slides/" = "Workshops & Slides"
+"/ertifications" = "Certifications"
 "/pdf/matei_marius_micu_cv.pdf" = "CV"
-"/slides" = "Slides"
 
 [params.hotjarAnalytics]
 hjid = 2229847
