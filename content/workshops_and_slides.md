@@ -11,10 +11,10 @@ List with various slides, workshops and presentations.
 
 ## University Lectures
 
-* *2022* - **Web Tehnologies**
+* *2022* - [**Web Technologies**](https://mateimicu.github.io/tw/)
   * I am teaching two groups of second-year students, roughly 50 students, Web Technologies.
   * The course focuses on core knowledge about front-end and backend, including current trends in the industry (microservices, GraphQL, architectural patterns, etc.)
-* *2019* - **Web Tehnologies**
+* *2019* - **Open Source Working Methodologies**
  * I was teaching two groups of third-year students, roughly 50 students, Open Source Working Methodologies.
  * This course was focused on Linux skills and introduced them to open source development and container-based infrastructure and concepts.
 * *Jun 2018* - **OpenStack overview at Faculty of Computer Science (Iasi)**
@@ -22,6 +22,7 @@ List with various slides, workshops and presentations.
 
 ## Slides
 
+* [Web Technologies](https://mateimicu.github.io/tw/) 2nd year course for University students
 * [OpenStack](http://openstack-slides.mateimicu.com) introduction and how the projects and components are structured. At the end present how we integrated with it in the [Argus](https://github.com/cloudbase/cloudbase-init-ci) project tot test [CloudBase-Init](https://github.com/openstack/cloudbase-init)
 * [Kubernets Deployments, Volumes, Secrets, ConfigMaps](http://k8s-volumes-secrets-deployments.mateimicu.com/)
 * [Conu explained](http://conu.mateimicu.com/) slides and examples on how to test docker images using [Conu](https://github.com/user-cont/conu)
