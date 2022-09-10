@@ -11,7 +11,7 @@ Go to :
 
 You will find two tabs:
 
-- `NAT Networks` 
+- `NAT Networks`
 
    ![NAT networks settings VirtualBox](/img//create-virtualbox-networks/02-nat-tab.png)
 
@@ -26,7 +26,3 @@ You can use the **+** button to add more networks or the **Edit** button to find
 - If DHCP is enabled
 
 ![Network Details for VirtualBox](/img//create-virtualbox-networks/04-network-details.png)
-
-
-
-

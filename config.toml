@@ -7,7 +7,7 @@ enableRobotsTXT = true
 
 [params.social]
 github = "mateimicu"
-email = "contact@mateimicu.com"
+email = "hire@mateimicu.com"
 linkedin = "matei-marius-micu-0246a211a"
 rss = "index.xml"
 
@@ -27,8 +27,8 @@ codeCopy = true
 
 [params.sections_right]
 "/workshops_and_slides/" = "Workshops & Slides"
-"/ertifications" = "Certifications"
 "/pdf/matei_marius_micu_cv.pdf" = "CV"
+"/certs/" = "Certifications"
 
 [params.hotjarAnalytics]
 hjid = 2229847
