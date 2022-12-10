@@ -17,7 +17,7 @@
   - [kdiscover][kdiscover]
 - 💬 Ping me about **system engineering**, **developer productivity**, **backed engineering**, **tools for cloud/developers**
 
-[![Matei's github activity graph](https://activity-graph.herokuapp.com/graph?username=mateimicu&theme=xcode)][github]
+[![Matei's github activity graph](https://github-readme-activity-graph.cyclic.app/graph?username=mateimicu&theme=xcode)][github]
 
 [rust]: https://www.rust-lang.org/
 [golang]: https://go.dev/
