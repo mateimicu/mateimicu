@@ -2,9 +2,9 @@
 
 #### I'm a Software Developer working Remote (but mostly from Romania)
 
-- 🏢 I'm currently working at [Prisma][prisma] on the [Data Platform][prisma-data-platform]
+- 🏢 I'm currently working at [Taktile][taktile] building the Platform Engineering/SRE function.
 - ⚙️  I use : [`.rs`][rust], [`.go`][golang], [`.py`][python], [`.tf`][terraform], [`.js`][javascript], [`.sh`][bash], [`.ts`][typescript] + whatever gets the job done
-- ☁️  I spend most of my time working on systems/cloud environments mostly **AWS** and sometimes **GCP**, **Azure**
+- ☁️  I spend most of my time working on systems/cloud environments mostly **AWS**( sometimes **GCP**, **Azure**) making sure they services scale⚖️ , are cost💸 effective and secure💸
 - 📫 Reach me:
   - [linkedin.com/in/matei-marius-micu/][linkedin]
   - [github.com/mateimicu][github]
@@ -35,6 +35,8 @@
 [twitter]: https://twitter.com/mateimicu
 [email]: mailto:hite@mateimicu.com
 [personal-website]: https://mateimicu.com
+
+[taktile]: https://taktile.com/
 
 [prisma]: https://github.com/prisma/prisma
 [prisma-data-platform]: https://www.prisma.io/data-platform
