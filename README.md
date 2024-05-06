@@ -1,23 +1,22 @@
 ### Hi there 👋
 
-#### I'm a Software Developer working Remote (but mostly from Romania)
+#### I'm a Software Developer working Remote
 
 - 🏢 I'm currently working at [Taktile][taktile] building the Platform Engineering/SRE function.
-- ⚙️  I use : [`.rs`][rust], [`.go`][golang], [`.py`][python], [`.tf`][terraform], [`.js`][javascript], [`.sh`][bash], [`.ts`][typescript] + whatever gets the job done
-- ☁️  I spend most of my time working on systems/cloud environments mostly **AWS**( sometimes **GCP**, **Azure**) making sure they services scale⚖️ , are cost💸 effective and secure💸
-- 📫 Reach me:
-  - [linkedin.com/in/matei-marius-micu/][linkedin]
-  - [github.com/mateimicu][github]
-  - [twitter.com/mateimicu][twitter]
-  - [📧 hire@mateimicu.com][email]
+- ⚙️  I use: [`.rs`][rust], [`.go`][golang], [`.py`][python], [`.tf`][terraform], [`.js`][javascript], [`.sh`][bash], [`.ts`][typescript] + whatever gets the job done
+- ☁️  I spend most of my time working on systems/cloud environments mostly: **AWS**( sometimes **GCP**, **Azure**) making sure they services scale⚖️ , are cost💸 effective and secure 🔒
 - 🌍 I'm mostly active in the SRE / system engineering community
 - 📖 I rarely write at [mateimicu.com][personal-website]
 - 🤩 Amazed by **Open Source** in general. Some projects that I maintain:
   - [auto-tag][auto-tag]
   - [kdiscover][kdiscover]
+  - [monorepo-dependabot-config][monorepo-dependabot-config]
 - 💬 Ping me about **system engineering**, **developer productivity**, **backed engineering**, **tools for cloud/developers**
+  - [linkedin.com/in/matei-marius-micu/][linkedin]
+  - [github.com/mateimicu][github]
+  - [twitter.com/mateimicu][twitter]
+  - [📧 hire@mateimicu.com][email]
 
-[![Matei's github activity graph](https://github-readme-activity-graph.cyclic.app/graph?username=mateimicu&theme=xcode)][github]
 
 [rust]: https://www.rust-lang.org/
 [golang]: https://go.dev/
@@ -29,6 +28,7 @@
 
 [auto-tag]: https://github.com/mateimicu/auto-tag
 [kdiscover]: https://github.com/mateimicu/kdiscover
+[monorepo-dependabot-config]: https://github.com/mateimicu/monorepo-dependabot-config
 
 [linkedin]: https://www.linkedin.com/in/matei-marius-micu/
 [github]: https://github.com/mateimicu
@@ -37,6 +37,3 @@
 [personal-website]: https://mateimicu.com
 
 [taktile]: https://taktile.com/
-
-[prisma]: https://github.com/prisma/prisma
-[prisma-data-platform]: https://www.prisma.io/data-platform
