@@ -27,8 +27,8 @@ codeCopy = true
 
 [params.sections_right]
 "/workshops_and_slides/" = "Workshops & Slides"
-"/pdf/matei_marius_micu_cv.pdf" = "CV"
-"/certs/" = "Certifications"
+# "/pdf/matei_marius_micu_cv.pdf" = "CV"
+# "/certs/" = "Certifications"
 
 [params.hotjarAnalytics]
 hjid = 2229847

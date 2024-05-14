@@ -1,7 +1,7 @@
 ---
 title: "Certifications"
 date: 2018-04-28T00:15:43+03:00
-draft: False
+draft: True
 tags: ["talks"]
 ---
 
