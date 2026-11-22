@@ -18,21 +18,21 @@ Also, a few restrictions (side quests) needed for this:
 
 * learn more about security and k8s internals
 * don't spend a lot of money
-* going for a managed solutions is cheating (for now)
+* going for a managed solution is cheating (for now)
 
 ### Why [Hetzner Cloud][Hetzner-Cloud]
 
-I already have experience with [EKS](eks) and [K8s on DigitalOcean](do-k8s), but they can get a bit expensive (especially if you start using other services).
+I already have experience with [EKS][eks] and [K8s on DigitalOcean][do-k8s], but they can get a bit expensive (especially if you start using other services).
 
 There is a good post [Affordable Kubernetes Cluster by Remko Seelig][affordable-kubernetes-cluster] about using [GKE][gke] with [preemptible nodes][preemptible-nodes], but the cluster does not have a lot of computing power.
 
 I already looked at [Kubernetes The Hard Way][kubernetes-the-hard-way] and remembered that [Hetzner Cloud][hetzner-cloud] offers pretty cheap compute instances (starts at 2,89 €).
-Working with [Hetzner Cloud][hetzner-cloud] means that I have to run control plane myself, this may cut in my processing power but has the advantage that I should get a more in-depth look at how it works.
+Working with [Hetzner Cloud][hetzner-cloud] means that I have to run control plane myself, this may cut into my processing power but has the advantage that I should get a more in-depth look at how it works.
 
 | Cloud Provider | Control Plane cost                                                                        | worker nodes (8vCPU 16GB ram)                                                | worker nodes count | Min Cost           | Max Cost           |
 |----------------|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------|--------------------|--------------------|
 | Google (gke)   | 0 (for single-zone or multi-zonal)  $0.10 per hour (± 73$ per month) for regional cluster | 31.86$* -> 105$ ~ 9 * g1-small * preemptible price                           | 9                  | 32$                | 105$               |
-| AWS (EKS)      | $0.10 per hour (± 73$ per month)                                                          | 28$* -> 146$ ~ 4 * a1.large in Ohio * spot insance price                     | 4                  | 91$                | 219$               |
+| AWS (EKS)      | $0.10 per hour (± 73$ per month)                                                          | 28$* -> 146$ ~ 4 * a1.large in Ohio * spot instance price                    | 4                  | 91$                | 219$               |
 | Azure (AKS)    | 0                                                                                         | $26* -> $265.72 ~ 4 * A2 v2 in East US2 * for maximum spot instance discount | 4                  | 26$                | 265$               |
 | Linode         | 0                                                                                         | $80 ~ 4 * (2vCPU 4GB ram)                                                    | 4                  | 80$                | 80$                |
 | Digital Ocean  | 0                                                                                         | $80 ~ 4 * (2vCPU 4GB ram)                                                    | 4                  | 80$                | 80$                |
@@ -64,7 +64,7 @@ One big advantage of running the control plane and doing everything from scratch
 Looking online there is already some work done in this direction
 
 * [github cluster api for hcloud][github-cluster-api-hcloud] looks like the exact thing I want
-* [hoby-kube][hoby-kube] seems to have a complete guide
+* [hobby-kube][hobby-kube] seems to have a complete guide
 * There is also some documentation from [Hetzner Cloud][hetzner-cloud]:
   * [Install a Kubernetes cluster on cloud servers][hcloud-install-kubernetes-cluster]
   * [Create a Microk8s Cluster][hcloud-create-microk8s-cluster]
@@ -73,7 +73,7 @@ Looking online there is already some work done in this direction
 * [hetzner-kube][hetzner-kube]
 * [Kubernetes on Hetzner Cloud: Setup a Kubernetes Cluster][kubernetes-hetzner-setup]
 
-There are also multiple installers for k8s; we can even consider [k3s][k3s] or [microk8s][microk8s]
+There are also multiple installers for k8s; we can even consider [k3s][k3s] or [microk8s][microk8s].
 
 
 ### Next Steps
@@ -93,7 +93,7 @@ I'll probably look more at [cluster api][cluster-api] and try to figure out how 
 [cluster-api]: https://github.com/kubernetes-sigs/cluster-api
 [upwork-hcloud-job]: https://www.upwork.com/jobs/Make-Kubernetes-cluster-production-ready-Hetzner-cloud-using-the-Cluster-API_~01c7e42d8122ac97ad
 [github-cluster-api-hcloud]: https://github.com/cluster-api-provider-hcloud/cluster-api-provider-hcloud/
-[hoby-kube]: https://github.com/hobby-kube/guide
+[hobby-kube]: https://github.com/hobby-kube/guide
 [hcloud-install-kubernetes-cluster]: https://community.hetzner.com/tutorials/install-kubernetes-cluster
 [hcloud-create-microk8s-cluster]: https://community.hetzner.com/tutorials/create-microk8s-cluster
 [cheapo-k8s]: https://www.tmjohnson.co.uk/posts/k8s/
@@ -101,4 +101,4 @@ I'll probably look more at [cluster api][cluster-api] and try to figure out how 
 [hetzner-kube]: https://github.com/xetys/hetzner-kube
 [kubernetes-hetzner-setup]: https://metawave.ch/posts/kubernetes-hetzner-setup/
 [k3s]: https://k3s.io/
-[microk8s]: [https://microk8s.io/]
+[microk8s]: https://microk8s.io/

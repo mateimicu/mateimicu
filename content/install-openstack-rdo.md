@@ -3,12 +3,12 @@ title: "Install Openstack RDO"
 date: 2018-04-21T15:32:13+03:00
 draft: False
 ---
-Install [RedHat Deployment of OpenStack](1) using [Packstack](2).
+Install [Red Hat Deployment of OpenStack][1] using [Packstack][2].
 
-**Packstack** is a wrapper over a collection of Puppet manifests that install a specific [release of OpenStack](3)
+**Packstack** is a wrapper over a collection of Puppet manifests that install a specific [release of OpenStack][3].
 
-## Prerequisite's 
-A virtual Machine with [CentOS 7 Minimal](4) with the following configurations:
+## Prerequisites
+A virtual Machine with [CentOS 7 Minimal][4] with the following configurations:
 
 - at least one NAT network
 - at least one Host-Only network
@@ -17,9 +17,9 @@ A virtual Machine with [CentOS 7 Minimal](4) with the following configurations:
 - enable nested paging
 - enable VT-x/AMD-v
 
-You can follow [this](5) article to prepare it.
+You can follow [this][5] article to prepare it.
 
-To enable support for vitalization (nested paging and VT-x/AMD-v) you can go to:
+To enable support for virtualization (nested paging and VT-x/AMD-v) you can go to:
 **Settings ->  System -> Acceleration**
 ![Enable Virtualization Support VirtualBox](/img/install-openstack-rdo/01-virtualbox-enable-acceleration.png)
 
@@ -35,10 +35,10 @@ The Host-Only network will be used to connect to the VM.
 Furthermore, I'll assume the following conventions:
 
 - `enp0s3` has the CIDR `10.0.2.0/24` and the DHCP assigned IP was `10.0.2.25`
-- `enp0s8` has the CIRD `192.168.99.0/24` and the DHCP assigned IP is `192.168.99.25`
+- `enp0s8` has the CIDR `192.168.99.0/24` and the DHCP assigned IP is `192.168.99.25`
 
 ## Install Packstack and prepare the system
-This process follows the steps form the (RDO website)[6].
+This process follows the steps from the [RDO website][6].
 
 ### Setup Networking 
 We need to disable the Network Manager from CentOS and configure a static IP for both interfaces
@@ -56,8 +56,8 @@ Run the following commands
 ```
 
 ##### Setup static IP
-Because we disabled the Network Manager we can't use (nmcli)[7] to configure network interfaces.
-We will have to rely on the classic network scrips found in `/etc/sysconfig/network-scripts/`
+Because we disabled the Network Manager we can't use [nmcli][7] to configure network interfaces.
+We will have to rely on the classic network scripts found in `/etc/sysconfig/network-scripts/`
 
 You can use `vi` or `nano` to edit the configurations.
 
@@ -102,7 +102,7 @@ we assumed in the [Convention](#conventions) section.
 
 We configure the `DNS` to use the ones provided by google.
 
-More information about the network scripts can be found on the [centos website](8).
+More information about the network scripts can be found on the [CentOS website][8].
 
 ---
 
@@ -120,9 +120,9 @@ IPV6_AUTOCONF=yes
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
-NAME=enp0s9
+NAME=enp0s8
 UUID=<uuid>
-DEVICE=enp0s9
+DEVICE=enp0s8
 PREFIX=24
 
 ONBOOT=yes
@@ -134,7 +134,7 @@ GATEWAY=192.168.99.2
 The same parameters as the NAT network were configured. We only omitted the `DNS`, this network has no Internet Connectivity
 and DNS settings are not required.
 
-To find more about networking in VirtualBox you can read [this](/posts/create-virtualbox-networks) article.
+To find more about networking in VirtualBox you can read [this](/create-virtualbox-networks/) article.
 
 
 Now you need to apply the configurations to both interfaces:
@@ -165,14 +165,14 @@ This ssh connection is more convenient to work.
 
 
 ### Install Packstack
-Install the [OpenStack realizes](3) you want and the packstack utility
+Install the [OpenStack release][3] you want and the packstack utility
 ```bash
 ~ $ sudo yum install -y centos-release-openstack-pike
 ~ $ sudo yum update -y
 ~ $ sudo yum install -y openstack-packstack
 ```
 
-You can use any [OpenStack realizes](3), I tested this with Newton(that is deprecated) and Pike.
+You can use any [OpenStack release][3], I tested this with Newton (that is deprecated) and Pike.
 
 ### Install Openstack
 
@@ -203,16 +203,16 @@ CONFIG_NAGIOS_INSTALL=n
 CONFIG_DEBUG_MODE=y
 ```
 
-Run the utility with this settings
+Run the utility with these settings
 ```bash
-~ $ packstack --answer-file==~/answers-file.txt
+~ $ packstack --answer-file=~/answers-file.txt
 ```
 
 ### Access Horizon
 To access the OpenStack deployment you first need to allow access to `httpd` from the private ip.
 
-Edit the file `/etc/httpd/conf.d/15-horizon_vhost.conf` and replace all occurrence's of `ServerAlias` with just one `ServerAlias *`.
-It should look like this (this is just the snipper)
+Edit the file `/etc/httpd/conf.d/15-horizon_vhost.conf` and replace all occurrences of `ServerAlias` with just one `ServerAlias *`.
+It should look like this (this is just the snippet)
 
 ```
 ...
@@ -226,10 +226,10 @@ It should look like this (this is just the snipper)
 ```
 
 You can now access the dashboard using the private ip (in our example `192.168.99.25`).
-The credential can be found in one of the files `keystonerc_admin` or `keystonerc_admin`.
+The credentials can be found in one of the files `keystonerc_admin` or `keystonerc_demo`.
 
 ### Troubleshooting
-When the packer utility finishes, it will give you information about the status of the deployment and the location of the logs.
+When the packstack utility finishes, it will give you information about the status of the deployment and the location of the logs.
 It might look something like this:
 ```bash
 ERROR : Error appeared during Puppet run: 10.0.2.30_controller.pp
@@ -249,11 +249,11 @@ You can list all the Openstack services with the following command:
 
 
 [1]: https://www.rdoproject.org/
-[2]: https://www.rdoproject.org/install/packstack/
+[2]: https://www.rdoproject.org/deploy/packstack/
 [3]: https://releases.openstack.org/
 [4]: https://www.centos.org/download/
 [5]: https://courses.tss-yonder.com/resurse/tutorial/virtualbox/instalare-centos-7/
-[6]: https://www.rdoproject.org/install/packstack/
-[7]: https://developer.gnome.org/NetworkManager/unstable/nmcli.html
+[6]: https://www.rdoproject.org/deploy/packstack/
+[7]: https://networkmanager.dev/docs/api/latest/nmcli.html
 [8]: https://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html
 
