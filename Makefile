@@ -1,12 +1,17 @@
+HUGO ?= hugo
+
+.PHONY: server build pull update_theme
+
 server:
-	hugo server -D -v --disableFastRender
+	$(HUGO) server -D --disableFastRender
+
+build:
+	$(HUGO) --minify
+
 pull:
-	git submodule init
-	git submodule update
+	git submodule update --init
+
 update_theme:
-	pushd themes/kiss
-	git fetch
-	git pull master
-	popd
-	git add themes
+	git submodule update --remote themes/kiss
+	git add themes/kiss
 	git commit -m "update: theme"

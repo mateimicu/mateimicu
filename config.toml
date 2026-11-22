@@ -1,9 +1,11 @@
-baseURL = "http://mateimicu.com/"
-languageCode = "en-us"
+baseURL = "https://mateimicu.com/"
+locale = "en-us"
 title = "mateimicu"
 theme = "kiss"
-Paginate = 5
 enableRobotsTXT = true
+
+[pagination]
+pagerSize = 5
 
 [params.social]
 github = "mateimicu"
