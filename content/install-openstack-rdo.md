@@ -113,11 +113,11 @@ TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
 BOOTPROTO=static
-DEFROUTE=yes
+DEFROUTE=no
 IPV4_FAILURE_FATAL=no
 IPV6INIT=yes
 IPV6_AUTOCONF=yes
-IPV6_DEFROUTE=yes
+IPV6_DEFROUTE=no
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 NAME=enp0s8
@@ -128,11 +128,10 @@ PREFIX=24
 ONBOOT=yes
 IPADDR=192.168.99.25
 NETMASK=255.255.255.0
-GATEWAY=192.168.99.2
 ```
 
-The same parameters as the NAT network were configured. We only omitted the `DNS`, this network has no Internet Connectivity
-and DNS settings are not required.
+The same parameters as the NAT network were configured, except for routing: this network has no Internet Connectivity,
+so we set `DEFROUTE=no` and omit the `GATEWAY` and `DNS` settings. The default route stays on the NAT interface.
 
 To find more about networking in VirtualBox you can read [this](/create-virtualbox-networks/) article.
 
