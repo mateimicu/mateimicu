@@ -1,7 +1,7 @@
 ---
 title: "what-to-code"
 date: 2017-11-28T23:57:06+02:00
-draft: True 
+draft: True
 static: true
 ---
 This is a list of projects I want to code for myself. Some of them are born from curiosity and some try to solve a problem that I have.
@@ -23,9 +23,9 @@ This is a list of projects I want to code for myself. Some of them are born from
     parser.add_option(verbosity);
     parser.add_option(debug);
    ```
- - A utility that automatically unsubscribes you from emails. For example, you can decrees the number of spam emails by unsubscribing to all
+ - A utility that automatically unsubscribes you from emails. For example, you can decrease the number of spam emails by unsubscribing to all
    emails. Or you can selectively mark some emails and the utility would try to unsubscribe from them.
    It should be smart enough to follow some steps when trying to finish the process and also smart enough to find the link in the email.
- - Find an old game and implement an AI for it (using different algorithms like from ML, IA, mostly based on reinforcement learning)
+ - Find an old game and implement an AI for it (using different algorithms like from ML, AI, mostly based on reinforcement learning)
 
 

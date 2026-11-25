@@ -1,5 +1,5 @@
 ---
-title: "Masters Degree First Year Update."
+title: "Master's Degree First Year Update"
 date: 2018-11-10T20:03:53+02:00
 draft: false
 tags: ["master degree", "WAD", "ATNN", "DOS", "ATSE", "ebs", "svs", "pcd"]
@@ -9,10 +9,10 @@ Update for the first year, it wasn't quite weekly like mentioned in the last pos
 Because some time passed I'll only give a short summary.
 <!--more-->
 
-Coursers for the first semester:
+Courses for the first semester:
 
 - [Web Application Development][wad]
-- [Advance Chapters of Neural Networks][acnn] (I also followed [Neural Networks][nn] the undergraduate course)
+- [Advanced Chapters of Neural Networks][acnn] (I also followed [Neural Networks][nn] the undergraduate course)
 - [Distributed Operating Systems][sod] (the website might be password protected but I have the [course description][sod-cd])
 - [Advanced Software Engineering Techniques][aset]
 
@@ -20,58 +20,57 @@ Courses for the second semester:
 
 - [Event-based systems][ebs]
 - [Specification and verification of distributed systems][svs]
-- [Pragmatical aspects related to cloud computing][https://www.qwiklabs.com/]
-- [Distributed and parallel programming ][pcd]
+- [Pragmatical aspects related to cloud computing](https://www.qwiklabs.com/)
+- [Distributed and parallel programming][pcd]
 
 ## Web Application Development
 
 On this course, we progressed to [RDF][rdf] and got an introduction to [SPARQL][sparql]. During the laboratories and courses, we also explored different ways to use/create and manipulate Semantic Data.
 
-Here my team's final project took all the projects from [Cloud Native Computing Foundation Landscape][cncf-landscape] ) mapped it into an Ontology about distributed and CloudNative software projects and in combinations with [schema.org](schema.org) we could have some smart queries in order to help a developer  choose the best type of technology based on license, GitHub metrics, technologies used, etc ... .
+Here my team's final project took all the projects from [Cloud Native Computing Foundation Landscape][cncf-landscape], mapped them into an Ontology about distributed and Cloud Native software projects and in combination with [schema.org](https://schema.org/) we could run some smart queries in order to help a developer choose the best type of technology based on license, GitHub metrics, technologies used, etc ... .
 
 
-## Advance Chapters of Neural Networks
+## Advanced Chapters of Neural Networks
 
 Implemented successfully the [MNIST dataset][MNIST] homework.
 
-For the final project, we classified [CIFRA10][cifra10] dataset and we were graded based on our accuracy. The model was a  convolutional neural network.
+For the final project, we classified the [CIFAR-10][cifar10] dataset and we were graded based on our accuracy. The model was a convolutional neural network.
 
 ## Distributed Operating Systems
 
 The python wrapper for the last homework used numpy and pandas to plot graphs of the results.
 
-For the second and third homework, we had to implement various operations for images (very similar to matrics operations), break the processing in multiple chings and schedule them on workers run with  [OpenMP][openmp].
+For the second and third homework, we had to implement various operations for images (very similar to matrix operations), break the processing into multiple chunks and schedule them on workers run with [OpenMP][openmp].
 
 For the research part, I had a presentation about [Lamport, L. (2006). Fast paxos. Distributed Computing, 19(2), 79-103.](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.159.4643&rep=rep1&type=pdf)
 
 ## Advanced Software Engineering Techniques
 
-Our solution examines the running pattern of various functions running in  [Kubeless][kubeless] and predicts the load allowing us the possibility to scale up/down when needed.
+Our solution examines the running pattern of various functions running in [Kubeless][kubeless] and predicts the load allowing us the possibility to scale up/down when needed.
 
-# Second Semester 
+# Second Semester
 
 ## Event-based systems
-Here the focus on all the types of event-based systems,  we analyzed topic-based systems, content-based systems, how they are implemented and the pros and cons to all of them.
-We also analyzed various researched papers. 
-Four the final project we have created a broker overlay over [NATS][nats] that is a topic-based streaming platform) that implement content-based filtering: you specify the property of the content that you are interested in and the brokers will stream to you all the messages that match. The project is extremely experimental but is available [here](https://github.com/mateimicu/nats-overlay-broker)
+Here the focus was on all the types of event-based systems, we analyzed topic-based systems, content-based systems, how they are implemented and the pros and cons to all of them.
+We also analyzed various research papers.
+For the final project we have created a broker overlay over [NATS][nats] (a topic-based streaming platform) that implements content-based filtering: you specify the property of the content that you are interested in and the brokers will stream to you all the messages that match. The project is extremely experimental but is available [here](https://github.com/mateimicu/nats-overlay-broker)
 
 My team also took a closer look at [de Assuncao, M. D., da Silva Veith, A., & Buyya, R. (2018). Distributed data stream processing and edge computing: A survey on resource elasticity and future directions. Journal of Network and Computer Applications, 103, 1-17.](https://arxiv.org/pdf/1709.01363.pdf)
 
 
 ## Specification and verification of distributed systems
 
-This course was mostly based on theory and exercises and we looked at various semantics and mathematical(logics) models that can help us specify and check various properties of distributed systems. 
+This course was mostly based on theory and exercises and we looked at various semantics and mathematical(logics) models that can help us specify and check various properties of distributed systems.
 
-For the practica side (except exercises) we looked at [CPN Tools
-][cpn-tools]
+For the practical side (except exercises) we looked at [CPN Tools][cpn-tools].
 
-## Distributed and parallel programming 
+## Distributed and parallel programming
 
-Here an overview of cloud paradigms and offerings was presented from a research perspective. 
+Here an overview of cloud paradigms and offerings was presented from a research perspective.
 
-Our projects revolved around architecting distributed applications based on various other technologies (blockchain for example) that can implement highly sensitive tasks, we looked at how we can ensure using blockchain the fair use of data streams provided by IoT devices. 
+Our projects revolved around architecting distributed applications based on various other technologies (blockchain for example) that can implement highly sensitive tasks, we looked at how we can ensure using blockchain the fair use of data streams provided by IoT devices.
 
-## Pragmatical aspects related to cloud computing 
+## Pragmatical aspects related to cloud computing
 
 This course was actually about [AWS][aws] and it was presented by engineers working on the tools using [qwiklabs](https://www.qwiklabs.com/). It presented various architectures used for creating cloud-native applications and how we can leverage tools from [AWS][aws].
 
@@ -110,17 +109,18 @@ In this category I'll put the progress on the research side, articles I read/pla
 - [Gray, J., Helland, P., O'Neil, P., & Shasha, D. (1996). The dangers of replication and a solution. ACM SIGMOD Record, 25(2), 173-182.](http://db.cs.berkeley.edu/cs286/papers/dangers-sigmod1996.pdf)
 - [Schneider, F. B. (1990). Implementing fault-tolerant services using the state machine approach: A tutorial. ACM Computing Surveys (CSUR), 22(4), 299-319.](http://blough.ece.gatech.edu/8813/schneider_state_machine.pdf)
 
-And I still need to get familiar with LaTeX
+And I still need to get familiar with LaTeX.
 
 
 [wad]: https://profs.info.uaic.ro/~busaco/teach/courses/wade/
 [acnn]: https://sites.google.com/view/rbenchea/advanced-chapters-of-neural-networks
 [nn]: https://sites.google.com/view/rbenchea/neural-networks
 [sod]: https://profs.info.uaic.ro/~vidrascu/MasterSOD/index.html
-[aset]: 
-https://profs.info.uaic.ro/~adiftene/Scoala/2019/ASET/index.html
-[ebs]:  https://profs.info.uaic.ro/~eonica/ebs/
-[svs]:  https://profs.info.uaic.ro/~webdata/planuri/master/MSD2FS01-ro.pdf
+[sod-cd]: https://profs.info.uaic.ro/~webdata/planuri/master/ro/MSD1104O1.pdf
+[openmp]: https://www.openmp.org/
+[aset]: https://profs.info.uaic.ro/~adiftene/Scoala/2019/ASET/index.html
+[ebs]: https://profs.info.uaic.ro/~eonica/ebs/
+[svs]: https://profs.info.uaic.ro/~webdata/planuri/master/MSD2FS01-ro.pdf
 [pcd]: https://profs.info.uaic.ro/~adria/teach/courses/pcd/
 [kubeless]: https://kubeless.io/
 [cncf-landscape]: https://landscape.cncf.io/
@@ -128,7 +128,7 @@ https://profs.info.uaic.ro/~adiftene/Scoala/2019/ASET/index.html
 [sparql]: https://en.wikipedia.org/wiki/SPARQL
 [nobel-prize]: http://data.nobelprize.org/
 [MNIST]: http://yann.lecun.com/exdb/mnist/
-[cifra10]: https://www.cs.toronto.edu/~kriz/cifar.html
+[cifar10]: https://www.cs.toronto.edu/~kriz/cifar.html
 [nats]: https://github.com/nats-io/nats-streaming-server
 [cpn-tools]: http://cpntools.org/
 [aws]: https://aws.amazon.com/

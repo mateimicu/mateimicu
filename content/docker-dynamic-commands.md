@@ -1,4 +1,3 @@
-
 ---
 title: "Docker Dynamic Commands"
 date: 2017-12-04T19:51:58+02:00
@@ -9,11 +8,11 @@ When learning docker an interesting question you may have is: **What happens wit
 
 Let's give a scenario:
 
-You create a simple docker file like this:
-```bash
+You create a simple Dockerfile like this:
+```dockerfile
 FROM python:2.7-slim
 
-# Update the system 
+# Update the system
 RUN apt-get update -y && apt-get upgrade -y
 
 # add some source files
@@ -25,8 +24,8 @@ EXPOSE 80
 # Run app.py when the container launches
 CMD ["python", "app.py"]
 ```
-this is not a complete `Dockerfile`, just the snippets we are interested in.
-If we try to build this an image based on this file, we get something like this:
+This is not a complete `Dockerfile`, just the snippets we are interested in.
+If we try to build an image based on this file, we get something like this:
 ```
 Step 1/5 : FROM python:2.7-slim
 ...
@@ -44,10 +43,10 @@ Successfully built 3609163bdce5
 The important step is `2` where we update the system. We can see that this will download and install new versions for the libraries that we have on the system.
 
 This can pose a problem because we may rely on a specific version of the library. In other words, next time we build the image (imagine we updated the codebase and need to create a new image
-to deploy) the `apt-get update -y && apt-get upgrade -y` run and ruin the image (our application not handling the new libraries).
+to deploy) the `apt-get update -y && apt-get upgrade -y` runs again and can ruin the image (our application may not handle the new libraries).
 
-### UnionFS to the rescue 
-One thing to keep in mind is the way images are built/stored/transferred using a Union file system that works with layers. If I a layer is already found it will not be "compiled" again, this means that if we add a new file to our directory `echo "new dummy file" >> dummy` and our current directory will look like this:
+### UnionFS to the rescue
+One thing to keep in mind is the way images are built/stored/transferred using a Union file system that works with layers. If a layer is already found it will not be "compiled" again, this means that if we add a new file to our directory `echo "new dummy file" >> dummy` and our current directory will look like this:
 ```bash
 ~ $ ls
 Dockerfile   dummy
@@ -73,15 +72,15 @@ Removing intermediate container a78e73b6e1b9
  ---> 96dd2f890cbf
 Successfully built 96dd2f890cbf
 ```
-we can see that the step `2` was skipped and the cached version for that layer (that runs `RUN apt-get update -y && apt-get upgrade -y`) was used.
+We can see that step `2` was skipped and the cached version for that layer (that runs `RUN apt-get update -y && apt-get upgrade -y`) was used.
 This is an important distinction to make if we build this image on the same machine (environment) where it was previously built the `RUN` command will not be executed.
 
-This helps us maintain the same OS-lvl libraries and binaries when we build images but open a new problem: **security**.
+This helps us maintain the same OS-level libraries and binaries when we build images but opens a new problem: **security**.
 
 One reason why you may want to update the libraries is to make sure you have the latest security patches.
-The build command helpfully allows us to disable the cache with the `--no-cache` command. Running the build in this way we can see that the updates are running.
+The build command helpfully allows us to disable the cache with the `--no-cache` flag. Running the build in this way we can see that the updates are running.
 ```bash
-docker build . --no-cache
+~ $ docker build . --no-cache
 Sending build context to Docker daemon  3.072kB
 Step 1/5 : FROM python:2.7-slim
  ---> b0259cf63993
@@ -104,12 +103,12 @@ Removing intermediate container 8c3928f25d7a
  ---> 4eb0161a51ab
 Successfully built 4eb0161a51ab
 ```
-Another problem with updating images is the amount of unnecessary updated it will bring, a docker image should be light and only contain the **required** dependencies.
+Another problem with updating images is the amount of unnecessary updates it will bring, a docker image should be light and only contain the **required** dependencies.
 Thankfully most containers don't and **shouldn't** be exposed to the internet. This minimizes the attack vectors a bad actor can use.
 
 ### Caching
-Another problem with `apt-get` in a container is the caching problem. You can't have a docker file that looks like this:
-```bash
+Another problem with `apt-get` in a container is the caching problem. You can't have a Dockerfile that looks like this:
+```dockerfile
 RUN apt-get update -y
 RUN apt-get upgrade -y
 ```
